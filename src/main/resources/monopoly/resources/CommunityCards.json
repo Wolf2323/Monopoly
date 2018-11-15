@@ -1,0 +1,29 @@
+[
+	{
+		"text": "Sie kommen aus dem Gefängnis frei! Behalten Sie diese Karte, bis Sie sie benötigen oder verkaufen",
+		"action": {
+			"type": "unjail"
+		}
+	},
+	{
+		"text": "Schulgeld. Zahlen Sie M 50.",
+		"action": {
+			"type": "money",
+			"amount": -50
+		}
+	},
+	{
+		"text": "Urlaubsgeld! Sie erhalten M 100",
+		"action": {
+			"type": "money",
+			"amount": 100
+		}
+	},
+	{
+		"text": "Ihre Lebensversicherung wird fällig. Sie erhalten M 20.",
+		"action": {
+			"type": "money",
+			"amount": 20
+		}
+	}
+]

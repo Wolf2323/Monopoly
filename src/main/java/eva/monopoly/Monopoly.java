@@ -1,6 +1,5 @@
 package eva.monopoly;
 
-public class Monopoly
-{
+public class Monopoly {
 
 }

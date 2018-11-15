@@ -1,0 +1,23 @@
+[
+	{
+		"text": "Rücken Sie vor bis zur Schlossallee.",
+		"action": {
+			"type": "move",
+			"target": "Schlossallee"
+		}
+	},
+	{
+		"text": "Machen Sie einen Ausflug zum Südbahnhof. Wenn Sie über Los kommen, ziehen Sie M 200 ein.",
+		"action": {
+			"type": "move",
+			"target": "Südbahnhof"
+		}
+	},
+	{
+		"text": "Ihr Bausparvertrag wird fällig. Sie erhalten M 200.",
+		"action": {
+			"type": "money",
+			"amount": -200
+		}
+	}
+]
