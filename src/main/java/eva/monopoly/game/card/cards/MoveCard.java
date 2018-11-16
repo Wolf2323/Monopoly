@@ -4,7 +4,7 @@ import eva.monopoly.game.card.Card;
 import eva.monopoly.game.player.Player;
 
 public class MoveCard extends Card {
-	String target;
+	private String target;
 
 	public MoveCard(String text, CardType cardType, String target) {
 		super(text, cardType);

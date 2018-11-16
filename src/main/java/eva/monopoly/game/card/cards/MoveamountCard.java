@@ -3,17 +3,17 @@ package eva.monopoly.game.card.cards;
 import eva.monopoly.game.card.Card;
 import eva.monopoly.game.player.Player;
 
-public class MovenextCard extends Card {
-	private String target;
+public class MoveamountCard extends Card {
+	private int amount;
 
-	public MovenextCard(String text, CardType cardType, String target) {
+	public MoveamountCard(String text, CardType cardType, int amount) {
 		super(text, cardType);
-		this.target = target;
+		this.amount = amount;
 	}
 
 	@Override
 	public void action(Player p) {
-		p.moveToNextTarget(target);
+		p.moveAmount(amount);
 	}
 
 }

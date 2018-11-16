@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import eva.monopoly.game.card.Card.CardType;
 import eva.monopoly.game.card.cards.JailCard;
 import eva.monopoly.game.card.cards.MoveCard;
+import eva.monopoly.game.card.cards.MoveamountCard;
 import eva.monopoly.game.card.cards.MovenextCard;
 import eva.monopoly.game.card.cards.UnjailCard;
 import eva.monopoly.game.player.Player;
@@ -60,6 +61,7 @@ public class Cards {
 					break;
 				case "moveamount":
 					amount = objAction.get("amount").getAsInt();
+					card = new MoveamountCard(text, type, amount);
 					break;
 				case "movenextmoneydouble":
 					target = objAction.get("target").getAsString();

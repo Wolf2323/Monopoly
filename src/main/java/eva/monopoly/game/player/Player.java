@@ -24,4 +24,6 @@ public interface Player {
 
 	public void moveToNextTarget(String target);
 
+	public void moveAmount(int amount);
+
 }

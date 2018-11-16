@@ -5,7 +5,7 @@ import eva.monopoly.game.card.Cards;
 import eva.monopoly.game.player.Player;
 
 public class UnjailCard extends Card {
-	Cards eventCards;
+	private Cards eventCards;
 
 	public UnjailCard(String text, CardType cardType, Cards eventCards) {
 		super(text, cardType);
