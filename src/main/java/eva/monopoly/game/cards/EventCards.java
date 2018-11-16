@@ -9,6 +9,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import eva.monopoly.game.cards.event.EventJailCard;
+import eva.monopoly.game.cards.event.EventUnjailCard;
 import eva.monopoly.utils.ResourceReaderUtil;
 
 public class EventCards {
@@ -36,8 +38,10 @@ public class EventCards {
 
 				switch (type) {
 				case "jail":
+					cards.add(new EventJailCard(text));
 					break;
 				case "unjail":
+					cards.add(new EventUnjailCard(text));
 					break;
 				case "move":
 					target = objAction.get("target").getAsString();
@@ -70,7 +74,7 @@ public class EventCards {
 		}
 	}
 
-	public abstract class EventCard extends Card {
+	public static abstract class EventCard extends Card {
 		public EventCard(String text) {
 			super(text);
 		}

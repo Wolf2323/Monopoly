@@ -16,4 +16,8 @@ public interface Player {
 
 	public boolean transferMoney(Player p, int money);
 
+	public void sendToJail();
+
+	public void releaseFromJail();
+
 }
