@@ -1,23 +1,113 @@
 [
 	{
-		"text": "Rücken Sie vor bis zur Schlossallee.",
+		"text": "Du kommst aus dem Gefängnis frei! Behalte diese Karte, bis du sie benötigst oder verkaufst.",
+		"action": {
+			"type": "unjail"
+		}
+	},
+	{
+		"text": "Gehe in das Gefängnis! Begeben dich direkt dorthin. Gehe nicht über Los. Ziehe nicht M 200 ein.",
+		"action": {
+			"type": "jail"
+		}
+	},
+	{
+		"text": "Rücke vor bis auf Los. (Ziehe M 200 ein).",
+		"action": {
+			"type": "move",
+			"target": "Los"
+		}
+	},
+	{
+		"text": "Rücke vor bis zur Schlossallee.",
 		"action": {
 			"type": "move",
 			"target": "Schlossallee"
 		}
 	},
 	{
-		"text": "Machen Sie einen Ausflug zum Südbahnhof. Wenn Sie über Los kommen, ziehen Sie M 200 ein.",
+		"text": "Mache einen Ausflug zum Südbahnhof. Wenn du über Los kommst, ziehe M 200 ein.",
 		"action": {
 			"type": "move",
 			"target": "Südbahnhof"
 		}
 	},
 	{
-		"text": "Ihr Bausparvertrag wird fällig. Sie erhalten M 200.",
+		"text": "Dein Bausparvertrag wird fällig. Du erhältst M 150.",
 		"action": {
 			"type": "money",
-			"amount": -200
+			"amount": 150
+		}
+	},
+	{
+		"text": "Rücke vor bis zum Opernplatz. Wenn du über Los kommst, ziehe M 200 ein.",
+		"action": {
+			"type": "money",
+			"amount": 200
+		}
+	},
+	{
+		"text": "Rücke vor bis zum nächsten Werk. Wirf die Würfel und zahlen dem Eigentümer den zehnfachen Betrag deines Wurfergebnisses. Wenn das Werk noch niemandem gehört, kannst du es von der Bank kaufen.",
+		"action": {
+			"type": "movenext",
+			"target": "werk"
+		}
+	},
+	{
+		"text": "Die Bank zahlt dir eine Dividende von M 50.",
+		"action": {
+			"type": "money",
+			"amount": 50
+		}
+	},
+	{
+		"text": "Du lässt deine Häuser renovieren. Zahle: M 25 pro Haus, M 100 pro Hotel.",
+		"action": {
+			"type": "moneybuildings",
+			"house": 25,
+			"hotel": 100
+		}
+	},
+	{
+		"text": "Rücke vor bis zur Seestrasse. Wenn du über Los kommst, ziehe M 200 ein.",
+		"action": {
+			"type": "move",
+			"taregt": "Seestrasse"
+		}
+	},
+	{
+		"text": "Du bist zum Vorstand gewählt worden. Zahle jedem Spieler M 50.",
+		"action": {
+			"type": "moneyplayer",
+			"amount": -50 
+		}
+	},
+	{
+		"text": "Gehe 3 Felder zurück.",
+		"action": {
+			"type": "moveamount",
+			"amount": -3
+		}
+	},
+	{
+		"text": "Strafzettel! Zahle M 15.",
+		"action": {
+			"type": "money",
+			"amount": -15
+		}
+	},
+	{
+		"text": "Rücke vor bis zum nächsten Bahnhof. Der Eigentümer erhält das Doppelte der normalen Miete. Wenn der Bahnhof noch niemandem gehört, kannst du ihn von der Bank kaufen.",
+		"action": {
+			"type": "movenextmoneydouble",
+			"taregt": "Bahnhof"
+		}
+	},
+	{
+		"text": "Rücke vor bis zum nächsten Bahnhof. Der Eigentümer erhält das Doppelte der normalen Miete. Wenn der Bahnhof noch niemandem gehört, kannst du ihn von der Bank kaufen.",
+		"action": {
+			"type": "movenextmoneydouble",
+			"taregt": "Bahnhof"
 		}
 	}
 ]

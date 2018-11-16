@@ -1,8 +1,21 @@
 [
 	{
-		"text": "Sie kommen aus dem Gefängnis frei! Behalten Sie diese Karte, bis Sie sie benötigen oder verkaufen",
+		"text": "Du kommst aus dem Gefängnis frei! Behalte diese Karte, bis du sie benötigst oder verkaufst.",
 		"action": {
 			"type": "unjail"
+		}
+	},
+	{
+		"text": "Gehe in das Gefängnis! Begeben dich direkt dorthin. Gehe nicht über Los. Ziehe nicht M 200 ein.",
+		"action": {
+			"type": "jail"
+		}
+	},
+	{
+		"text": "Rücke vor bis auf Los. (Ziehe M 200 ein).",
+		"action": {
+			"type": "move",
+			"target": "Los"
 		}
 	},
 	{
