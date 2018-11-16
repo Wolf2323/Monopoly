@@ -1,0 +1,30 @@
+[
+	{
+		"name": "Badstrasse",
+		"miete": {
+			"nohouse": 2,
+			"onehouse": 10,
+			"twohouses": 30,
+			"threehouses": 90,
+			"fourhouses": 160,
+			"hotel": 250
+		},
+		"mortgagevalue": 30,
+		"housecost": 50,
+		"group": "brown"
+	},
+	{
+		"name": "Badstrasse",
+		"miete": {
+			"nohouse": 2,
+			"onehouse": 10,
+			"twohouses": 30,
+			"threehouses": 90,
+			"fourhouses": 160,
+			"hotel": 250
+		},
+		"mortgagevalue": 30,
+		"housecost": 50,
+		"group": "brown"
+	},
+]
