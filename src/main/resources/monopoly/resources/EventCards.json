@@ -42,8 +42,8 @@
 	{
 		"text": "Rücke vor bis zum Opernplatz. Wenn du über Los kommst, ziehe M 200 ein.",
 		"action": {
-			"type": "money",
-			"amount": 200
+			"type": "move",
+			"target": "Opernplatz"
 		}
 	},
 	{
