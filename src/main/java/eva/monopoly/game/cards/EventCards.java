@@ -29,18 +29,43 @@ public class EventCards {
 				JsonObject objAction = obj.get("action").getAsJsonObject();
 				String type = objAction.get("type").getAsString();
 
-				switch (type) {
-				case "money": {
-					int amount = objAction.get("amount").getAsInt();
-					cards.add(new EventMoneyCard());
-					break;
-				}
-				default:
-					break;
-				}
+				String target;
+				int amount;
+				int house;
+				int hotel;
 
+				switch (type) {
+				case "jail":
+					break;
+				case "unjail":
+					break;
+				case "move":
+					target = objAction.get("target").getAsString();
+					break;
+				case "movenext":
+					target = objAction.get("target").getAsString();
+					break;
+				case "moveamount":
+					amount = objAction.get("amount").getAsInt();
+					break;
+				case "movenextmoneydouble":
+					target = objAction.get("target").getAsString();
+					break;
+				case "money":
+					amount = objAction.get("amount").getAsInt();
+					break;
+				case "moneybuildings":
+					house = objAction.get("house").getAsInt();
+					hotel = objAction.get("hotel").getAsInt();
+					break;
+				case "moneyplayer":
+					amount = objAction.get("amount").getAsInt();
+					break;
+				default:
+					throw new IllegalArgumentException("type '" + type + "' is unknown");
+				}
 			}
-		} catch (URISyntaxException | IOException e) {
+		} catch (URISyntaxException | IOException | IllegalArgumentException e) {
 			e.printStackTrace();
 		}
 	}
