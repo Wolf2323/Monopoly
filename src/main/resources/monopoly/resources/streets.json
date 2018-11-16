@@ -14,17 +14,31 @@
 		"group": "brown"
 	},
 	{
-		"name": "Badstrasse",
+		"name": "Turmstrasse",
 		"miete": {
-			"nohouse": 2,
-			"onehouse": 10,
-			"twohouses": 30,
-			"threehouses": 90,
-			"fourhouses": 160,
-			"hotel": 250
+			"nohouse": 4,
+			"onehouse": 20,
+			"twohouses": 60,
+			"threehouses": 180,
+			"fourhouses": 320,
+			"hotel": 450
 		},
 		"mortgagevalue": 30,
 		"housecost": 50,
 		"group": "brown"
 	},
+	{
+		"name": "Poststrasse",
+		"miete": {
+			"nohouse": 8,
+			"onehouse": 40,
+			"twohouses": 100,
+			"threehouses": 300,
+			"fourhouses": 450,
+			"hotel": 600
+		},
+		"mortgagevalue": 60,
+		"housecost": 50,
+		"group": "lightblue"
+	}
 ]

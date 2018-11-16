@@ -20,4 +20,8 @@ public interface Player {
 
 	public void releaseFromJail();
 
+	public void moveToTaregt(String target);
+
+	public void moveToNextTarget(String target);
+
 }
