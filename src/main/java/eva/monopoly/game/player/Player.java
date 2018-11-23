@@ -26,4 +26,6 @@ public interface Player {
 
 	public void moveAmount(int amount);
 
+	public void setPayDouble();
+
 }
