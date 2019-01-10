@@ -57,7 +57,7 @@ public class Client
 			restartIfNoProblem();
 			return;
 		}
-		ExchangeClient.consoleExchangeClient(LogLevel.INFO, null, "Server hinzugefügt: " + Config.host);
+		ExchangeClient.consoleExchangeClient(LogLevel.INFO, null, "Server hinzugefügt: ");
 	}
 
 	public static void sendMessage(final String receiver, final String channel, final String message)
