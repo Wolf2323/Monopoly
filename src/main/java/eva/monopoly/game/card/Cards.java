@@ -45,6 +45,7 @@ public class Cards
 				String target;
 				int amount;
 				int house;
+				int hotel;
 
 				Card card = null;
 
