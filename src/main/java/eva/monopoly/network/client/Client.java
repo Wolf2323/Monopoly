@@ -2,47 +2,41 @@ package eva.monopoly.network.client;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import eva.monopoly.network.api.ExchangeObject;
 import eva.monopoly.network.api.ExchangeType;
+import eva.monopoly.network.api.SocketConnector;
 
 
 public class Client
 {
-	public final static Logger				LOGGER	= Logger.getLogger(Client.class.getName());
+	public final static Logger		LOGGER	= Logger.getLogger(Client.class.getName());
 
-	private static ServerHandlerRunnable	connectedServerSocket;
-
-	private static boolean					restart;
+	private static SocketConnector	socketConnector;
 
 	private Client()
 	{
-	}
-
-	public static void setRestart()
-	{
-		restart = true;
+		// registerHandle
 	}
 
 	public static void disconnectFromProxy()
 	{
 		try
 		{
-			connectedServerSocket.getSocket().close();
+			socketConnector.closeConnection();
 		}
 		catch(Exception e)
 		{
 		}
-		connectedServerSocket = null;
+		socketConnector = null;
 	}
 
 	public static void connectToProxy()
 	{
 		try
 		{
-			connectedServerSocket = new ServerHandlerRunnable(new Socket(Config.host, Config.port));
+			socketConnector = new ServerHandlerRunnable(new Socket(Config.host, Config.port));
 			Utils.executeAsync(new HeartBeat(), 0, 200);
 		}
 		catch(UnknownHostException e)
@@ -67,70 +61,9 @@ public class Client
 
 	private static void sendMessage(final ExchangeObject ExchangeObject)
 	{
-		if(connectedServerSocket != null)
+		if(socketConnector != null)
 		{
-			connectedServerSocket.sendMessage(ExchangeObject);
+			socketConnector.sendMessage(ExchangeObject);
 		}
-	}
-
-	public static void restartIfNoProblem()
-	{
-		if(restart)
-		{
-			return;
-		}
-		try
-		{
-			Network.getThisServer().setServerStatus(ServerStatus.LOCKDOWN);
-		}
-		catch(LockDownException e)
-		{
-		}
-
-		disconnectFromProxy();
-
-		final Runnable runnable = () ->
-		{
-
-			try
-			{
-				final Socket socket = new Socket(Config.host, Config.port);
-				if(socket.isConnected())
-				{
-					socket.close();
-					Utils.restart();
-					return;
-				}
-				socket.close();
-			}
-			catch(IOException e)
-			{
-			}
-
-		};
-
-		switch(Network.getThisServer().getServerMode())
-		{
-			case BUNGEE:
-			{
-				UtilsBungee.executeAsync(runnable, 0, 30, TimeUnit.SECONDS);
-				break;
-			}
-			case BUKKIT:
-			{
-				UtilsBukkit.executeSync(runnable, 0, 600);
-				break;
-			}
-		}
-	}
-
-	public static ServerHandlerRunnable getConnectedServerSocket()
-	{
-		return connectedServerSocket;
-	}
-
-	public static void resolveData(ExchangeObject obj)
-	{
-
 	}
 }
