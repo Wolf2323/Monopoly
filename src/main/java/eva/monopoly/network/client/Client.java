@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Logger;
 
-import eva.monopoly.network.api.ExchangeObject;
-import eva.monopoly.network.api.ExchangeType;
 import eva.monopoly.network.api.SocketConnector;
 
 
@@ -37,18 +35,15 @@ public class Client
 		try
 		{
 			socketConnector = new ServerHandlerRunnable(new Socket(Config.host, Config.port));
-			Utils.executeAsync(new HeartBeat(), 0, 200);
 		}
 		catch(UnknownHostException e)
 		{
 			ExchangeClient.consoleExchangeClient(LogLevel.ERROR, null, "Server " + Config.host + " ungültiger Host");
-			restartIfNoProblem();
 			return;
 		}
 		catch(IOException e)
 		{
 			ExchangeClient.consoleExchangeClient(LogLevel.ERROR, null, "Fehler bei Initialisierung des Servers: " + Config.host);
-			restartIfNoProblem();
 			return;
 		}
 		ExchangeClient.consoleExchangeClient(LogLevel.INFO, null, "Server hinzugefügt: ");

@@ -8,11 +8,10 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -22,10 +21,11 @@ import eva.monopoly.network.api.messages.NameInfo;
 public abstract class SocketConnector
 {
 	final private static ScheduledExecutorService																		SCHEDULED_EXECUTOR	= new ScheduledThreadPoolExecutor(
-			4);
-	final private static ExecutorService																				MESSAGE_DISPATCHER	= new ThreadPoolExecutor(2, 8,
-			30, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+			1);
+	final private static ExecutorService																				MESSAGE_DISPATCHER	= Executors
+			.newSingleThreadExecutor();
 	final private static long																							PERIOD				= 50;
+	final private static int																							TIMEOUT				= 15 * 1000;
 
 	private final Socket																								socket;
 	private ObjectOutputStream																							out;
@@ -48,7 +48,8 @@ public abstract class SocketConnector
 	{
 		try
 		{
-			this.socket.setSoTimeout(15 * 1000);
+
+			this.socket.setSoTimeout(TIMEOUT);
 		}
 		catch(SocketException e)
 		{
