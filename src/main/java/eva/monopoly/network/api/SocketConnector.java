@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 import eva.monopoly.network.api.messages.NameInfo;
 
 
-public abstract class SocketConnector
+public class SocketConnector
 {
 	final private static ScheduledExecutorService																		SCHEDULED_EXECUTOR	= new ScheduledThreadPoolExecutor(
 			1);

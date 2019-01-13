@@ -2,23 +2,45 @@ package eva.monopoly.network.client;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.function.Consumer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import eva.monopoly.network.api.ExchangeMessage;
+import eva.monopoly.network.api.HandlerException;
 import eva.monopoly.network.api.SocketConnector;
 
 
 public class Client
 {
-	public final static Logger		LOGGER	= Logger.getLogger(Client.class.getName());
+	public final static Logger	LOGGER	= Logger.getLogger(Client.class.getName());
 
-	private static SocketConnector	socketConnector;
+	private SocketConnector		socketConnector;
 
-	private Client()
+	public Client(String host, int port, String name, Consumer<HandlerException> shutdownHandler) throws UnknownHostException, IOException
 	{
+		try
+		{
+			socketConnector = new SocketConnector(new Socket(host, port), shutdownHandler);
+			socketConnector.establishConnection(name);
+		}
+		catch(UnknownHostException e)
+		{
+			LOGGER.log(Level.SEVERE, "Ungültige Server Adresse: " + host, e);
+			throw e;
+		}
+		catch(IOException e)
+		{
+			LOGGER.log(Level.SEVERE, "Fehler bei der Initialisierung des Servers: " + host, e);
+			throw e;
+		}
+		LOGGER.log(Level.INFO, "Verbunden zu Server: " + host);
+
 		// registerHandle
 	}
 
-	public static void disconnectFromProxy()
+	public void closeConnection()
 	{
 		try
 		{
@@ -30,35 +52,18 @@ public class Client
 		socketConnector = null;
 	}
 
-	public static void connectToProxy()
+	public String getRemoteName()
 	{
-		try
-		{
-			socketConnector = new ServerHandlerRunnable(new Socket(Config.host, Config.port));
-		}
-		catch(UnknownHostException e)
-		{
-			ExchangeClient.consoleExchangeClient(LogLevel.ERROR, null, "Server " + Config.host + " ungültiger Host");
-			return;
-		}
-		catch(IOException e)
-		{
-			ExchangeClient.consoleExchangeClient(LogLevel.ERROR, null, "Fehler bei Initialisierung des Servers: " + Config.host);
-			return;
-		}
-		ExchangeClient.consoleExchangeClient(LogLevel.INFO, null, "Server hinzugefügt: ");
+		return socketConnector.getRemoteName();
 	}
 
-	public static void sendMessage(final String receiver, final String channel, final String message)
+	public boolean sendMessage(final ExchangeMessage exchangeMessage)
 	{
-		sendMessage(new ExchangeObject(Network.getThisServer().getName(), receiver, ExchangeType.DATA, channel, message));
+		return socketConnector.sendMessage(exchangeMessage);
 	}
 
-	private static void sendMessage(final ExchangeObject ExchangeObject)
+	public <T extends ExchangeMessage> void registerHandle(Class<T> clazz, Consumer<T> consumer)
 	{
-		if(socketConnector != null)
-		{
-			socketConnector.sendMessage(ExchangeObject);
-		}
+		socketConnector.registerHandle(clazz, consumer);
 	}
 }
