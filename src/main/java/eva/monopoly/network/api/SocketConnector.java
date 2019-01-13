@@ -15,8 +15,6 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-import eva.monopoly.network.api.messages.NameInfo;
-
 
 public class SocketConnector
 {
@@ -31,7 +29,6 @@ public class SocketConnector
 	private ObjectOutputStream																							out;
 	private ObjectInputStream																							in;
 	private ScheduledFuture<?>																							future;
-	private String																										remoteName			= "Undefined";
 	private Consumer<HandlerException>																					shutdownHandler;
 
 	private final ConcurrentHashMap<Class<? extends ExchangeMessage>, ExchangeMessageHandle<? extends ExchangeMessage>>	handler				= new ConcurrentHashMap<>();
@@ -40,11 +37,9 @@ public class SocketConnector
 	{
 		this.socket = socket;
 		this.shutdownHandler = shutdownHandler;
-
-		registerHandle(NameInfo.class, (nameInfo) -> remoteName = nameInfo.getName());
 	}
 
-	public void establishConnection(String name)
+	public void establishConnection()
 	{
 		try
 		{
@@ -106,8 +101,6 @@ public class SocketConnector
 		};
 
 		future = SCHEDULED_EXECUTOR.scheduleAtFixedRate(runnable, 1, PERIOD, TimeUnit.MILLISECONDS);
-
-		sendMessage(new NameInfo(name));
 	}
 
 	public void closeConnection() throws IOException
@@ -121,11 +114,6 @@ public class SocketConnector
 	public Socket getSocket()
 	{
 		return socket;
-	}
-
-	public String getRemoteName()
-	{
-		return remoteName;
 	}
 
 	public boolean sendMessage(final ExchangeMessage exchangeMessage)
