@@ -1,12 +1,16 @@
 package eva.monopoly.view;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import eva.monopoly.game.player.Player;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-public class GameBoardController {
+public class GameBoardController implements Initializable{
 	@FXML
 	Button cards;
 	@FXML
@@ -15,6 +19,12 @@ public class GameBoardController {
 	TextField money;
 	@FXML
 	Label playerName;
+	
+	private String uName;
+	
+	public void initData(String uName) {
+		this.uName = uName;
+	}
 
 	private void refreshMoney(Player player) {
 		// show Money of the Player
@@ -31,5 +41,18 @@ public class GameBoardController {
 
 	private void showNickname(Player player) {
 		playerName.setText(player.getName());
+	}
+
+	public void showRoundData() {
+		/*
+		 * show Dice roll, show data of target field, give button options to buy
+		 * or ignore if field is not occupied, give option to place house if
+		 * target field and corresponding street is owned by the player
+		 */
+	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		playerName.setText(uName);
 	}
 }
