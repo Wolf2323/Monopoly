@@ -2,7 +2,6 @@ package eva.monopoly.network.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.function.Consumer;
@@ -11,6 +10,7 @@ import java.util.logging.Logger;
 
 import eva.monopoly.network.api.HandlerException;
 import eva.monopoly.network.api.SocketConnector;
+import eva.monopoly.network.api.messages.NameInfo;
 import eva.monopoly.network.client.Client;
 
 
@@ -29,16 +29,12 @@ public class Server
 			serverSocket = new ServerSocket(port);
 			final Runnable runnable = () ->
 			{
-				final ClientHandlerRunnable runnable = new ClientHandlerRunnable(ExchangeServer.getServerSocket().accept());
-				addClient(runnable);
+				final SocketConnector client = new SocketConnector(serverSocket.accept(), null);
+				client.establishConnection();
+				client.sendMessage(new NameInfo(name));
+				client.registerHandle(NameInfo.class, nameInfo -> socketConnectors.put(nameInfo.getName(), client));
 			};
-			socketConnector = new SocketConnector(new Socket(host, port), shutdownHandler);
-			socketConnector.establishConnection(name);
-		}
-		catch(UnknownHostException e)
-		{
-			LOGGER.log(Level.SEVERE, "Ungültige Server Adresse: " + host, e);
-			throw e;
+			new Thread(runnable).start();
 		}
 		catch(IOException e)
 		{
