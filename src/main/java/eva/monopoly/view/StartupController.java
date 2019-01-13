@@ -20,9 +20,13 @@ public class StartupController {
 	Button okBttn;
 	public void enterNickname(ActionEvent event) throws IOException {
 		// set Playername from Textfield nickname and switch to mainMenu.fxml
-		nickname.getText();
-		Parent mainMenuParent = FXMLLoader.load(getClass().getResource("mainMenu.fxml"));
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("mainMenu.fxml"));
+		Parent mainMenuParent = loader.load();
 		Scene mainMenu = new Scene(mainMenuParent);
+		String uName = nickname.getText();
+		MainMenuController menuControl = loader.getController();
+		menuControl.initData(uName);
 		Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		window.setScene(mainMenu);
 		window.show();

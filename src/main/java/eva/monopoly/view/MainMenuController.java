@@ -2,11 +2,14 @@ package eva.monopoly.view;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -18,18 +21,25 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class MainMenuController {
+public class MainMenuController implements Initializable {
 	@FXML
 	Button startBttn;
 	@FXML
 	Button findBttn;
 	@FXML
 	Button nicknameBttn;
+	@FXML
+	Label uNameLabel;
+	
+	private String uName;
+	
+	public void initData(String nickname){
+		uName = nickname;
+	}
 
 	private void startGame(ActionEvent event) throws UnknownHostException {
 		InetAddress inet = InetAddress.getLocalHost();
 		Stage newWindow = new Stage();
-		Boolean test = true;
 		newWindow.initModality(Modality.APPLICATION_MODAL);
 		newWindow.setTitle("Start Game");
 		newWindow.setMinWidth(500);
@@ -102,5 +112,10 @@ public class MainMenuController {
 		Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		window.setScene(startUp);
 		window.show();
+	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		uNameLabel.setText("Hello, " + uName);
 	}
 }
