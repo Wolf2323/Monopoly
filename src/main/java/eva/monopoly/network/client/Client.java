@@ -7,9 +7,9 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import eva.monopoly.network.api.ExchangeMessage;
 import eva.monopoly.network.api.HandlerException;
 import eva.monopoly.network.api.SocketConnector;
+import eva.monopoly.network.api.messages.NameInfo;
 
 
 public class Client
@@ -17,13 +17,21 @@ public class Client
 	public final static Logger	LOGGER	= Logger.getLogger(Client.class.getName());
 
 	private SocketConnector		socketConnector;
+	private String				remoteName;
 
 	public Client(String host, int port, String name, Consumer<HandlerException> shutdownHandler) throws UnknownHostException, IOException
 	{
 		try
 		{
-			socketConnector = new SocketConnector(new Socket(host, port), shutdownHandler);
-			socketConnector.establishConnection(name);
+			SocketConnector socketConnector = new SocketConnector(new Socket(host, port), shutdownHandler);
+			socketConnector.establishConnection();
+			socketConnector.sendMessage(new NameInfo(name));
+
+			socketConnector.registerHandle(NameInfo.class, nameInfo ->
+			{
+				this.socketConnector = socketConnector;
+				this.remoteName = nameInfo.getName();
+			});
 		}
 		catch(UnknownHostException e)
 		{
@@ -36,8 +44,6 @@ public class Client
 			throw e;
 		}
 		LOGGER.log(Level.INFO, "Verbunden zu Server: " + host);
-
-		// registerHandle
 	}
 
 	public void closeConnection()
@@ -45,6 +51,7 @@ public class Client
 		try
 		{
 			socketConnector.closeConnection();
+			LOGGER.log(Level.INFO, "Verbunden zu Server getrennt");
 		}
 		catch(Exception e)
 		{
@@ -52,18 +59,13 @@ public class Client
 		socketConnector = null;
 	}
 
+	public SocketConnector getSocketConnector()
+	{
+		return socketConnector;
+	}
+
 	public String getRemoteName()
 	{
-		return socketConnector.getRemoteName();
-	}
-
-	public boolean sendMessage(final ExchangeMessage exchangeMessage)
-	{
-		return socketConnector.sendMessage(exchangeMessage);
-	}
-
-	public <T extends ExchangeMessage> void registerHandle(Class<T> clazz, Consumer<T> consumer)
-	{
-		socketConnector.registerHandle(clazz, consumer);
+		return remoteName;
 	}
 }
