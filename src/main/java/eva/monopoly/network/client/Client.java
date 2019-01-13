@@ -2,135 +2,68 @@ package eva.monopoly.network.client;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.concurrent.TimeUnit;
+import java.net.UnknownHostException;
+import java.util.function.Consumer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import eva.monopoly.network.api.ExchangeObject;
-import eva.monopoly.network.api.ExchangeType;
+import eva.monopoly.network.api.ExchangeMessage;
+import eva.monopoly.network.api.HandlerException;
+import eva.monopoly.network.api.SocketConnector;
 
 
 public class Client
 {
-	public final static Logger				LOGGER	= Logger.getLogger(Client.class.getName());
+	public final static Logger	LOGGER	= Logger.getLogger(Client.class.getName());
 
-	private static ServerHandlerRunnable	connectedServerSocket;
+	private SocketConnector		socketConnector;
 
-	private static boolean					restart;
-
-	private Client()
-	{
-	}
-
-	public static void setRestart()
-	{
-		restart = true;
-	}
-
-	public static void disconnectFromProxy()
+	public Client(String host, int port, String name, Consumer<HandlerException> shutdownHandler) throws UnknownHostException, IOException
 	{
 		try
 		{
-			connectedServerSocket.getSocket().close();
+			socketConnector = new SocketConnector(new Socket(host, port), shutdownHandler);
+			socketConnector.establishConnection(name);
+		}
+		catch(UnknownHostException e)
+		{
+			LOGGER.log(Level.SEVERE, "Ungültige Server Adresse: " + host, e);
+			throw e;
+		}
+		catch(IOException e)
+		{
+			LOGGER.log(Level.SEVERE, "Fehler bei der Initialisierung des Servers: " + host, e);
+			throw e;
+		}
+		LOGGER.log(Level.INFO, "Verbunden zu Server: " + host);
+
+		// registerHandle
+	}
+
+	public void closeConnection()
+	{
+		try
+		{
+			socketConnector.closeConnection();
 		}
 		catch(Exception e)
 		{
 		}
-		connectedServerSocket = null;
+		socketConnector = null;
 	}
 
-	public static void connectToProxy()
+	public String getRemoteName()
 	{
-		try
-		{
-			connectedServerSocket = new ServerHandlerRunnable(new Socket(Config.host, Config.port));
-			Utils.executeAsync(new HeartBeat(), 0, 200);
-		}
-		catch(UnknownHostException e)
-		{
-			ExchangeClient.consoleExchangeClient(LogLevel.ERROR, null, "Server " + Config.host + " ungültiger Host");
-			restartIfNoProblem();
-			return;
-		}
-		catch(IOException e)
-		{
-			ExchangeClient.consoleExchangeClient(LogLevel.ERROR, null, "Fehler bei Initialisierung des Servers: " + Config.host);
-			restartIfNoProblem();
-			return;
-		}
-		ExchangeClient.consoleExchangeClient(LogLevel.INFO, null, "Server hinzugefügt: ");
+		return socketConnector.getRemoteName();
 	}
 
-	public static void sendMessage(final String receiver, final String channel, final String message)
+	public boolean sendMessage(final ExchangeMessage exchangeMessage)
 	{
-		sendMessage(new ExchangeObject(Network.getThisServer().getName(), receiver, ExchangeType.DATA, channel, message));
+		return socketConnector.sendMessage(exchangeMessage);
 	}
 
-	private static void sendMessage(final ExchangeObject ExchangeObject)
+	public <T extends ExchangeMessage> void registerHandle(Class<T> clazz, Consumer<T> consumer)
 	{
-		if(connectedServerSocket != null)
-		{
-			connectedServerSocket.sendMessage(ExchangeObject);
-		}
-	}
-
-	public static void restartIfNoProblem()
-	{
-		if(restart)
-		{
-			return;
-		}
-		try
-		{
-			Network.getThisServer().setServerStatus(ServerStatus.LOCKDOWN);
-		}
-		catch(LockDownException e)
-		{
-		}
-
-		disconnectFromProxy();
-
-		final Runnable runnable = () ->
-		{
-
-			try
-			{
-				final Socket socket = new Socket(Config.host, Config.port);
-				if(socket.isConnected())
-				{
-					socket.close();
-					Utils.restart();
-					return;
-				}
-				socket.close();
-			}
-			catch(IOException e)
-			{
-			}
-
-		};
-
-		switch(Network.getThisServer().getServerMode())
-		{
-			case BUNGEE:
-			{
-				UtilsBungee.executeAsync(runnable, 0, 30, TimeUnit.SECONDS);
-				break;
-			}
-			case BUKKIT:
-			{
-				UtilsBukkit.executeSync(runnable, 0, 600);
-				break;
-			}
-		}
-	}
-
-	public static ServerHandlerRunnable getConnectedServerSocket()
-	{
-		return connectedServerSocket;
-	}
-
-	public static void resolveData(ExchangeObject obj)
-	{
-
+		socketConnector.registerHandle(clazz, consumer);
 	}
 }
