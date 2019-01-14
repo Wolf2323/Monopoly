@@ -26,11 +26,11 @@ public class Client
 			SocketConnector socketConnector = new SocketConnector(new Socket(host, port), shutdownHandler);
 			socketConnector.establishConnection();
 			socketConnector.sendMessage(new NameInfo(name));
-
 			socketConnector.registerHandle(NameInfo.class, nameInfo ->
 			{
 				this.socketConnector = socketConnector;
 				this.remoteName = nameInfo.getName();
+				LOGGER.log(Level.INFO, "Server Name: " + nameInfo.getName());
 			});
 		}
 		catch(UnknownHostException e)
@@ -51,12 +51,13 @@ public class Client
 		try
 		{
 			socketConnector.closeConnection();
-			LOGGER.log(Level.INFO, "Verbunden zu Server getrennt");
+			LOGGER.log(Level.INFO, "Verbindung zum Server getrennt");
 		}
 		catch(Exception e)
 		{
 		}
 		socketConnector = null;
+		remoteName = null;
 	}
 
 	public SocketConnector getSocketConnector()
