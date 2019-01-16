@@ -86,17 +86,19 @@ public class SocketConnector
 					catch(SocketException | SocketTimeoutException e)
 					{
 						shutdownConnection("Socket wurde unerwartet geschlossen!", e);
-
+						return;
 					}
 					catch(Exception e)
 					{
 						shutdownConnection("Fehler beim Empfangen der Nachricht", e);
+						return;
 					}
 				}
 			}
 			catch(IOException e)
 			{
 				shutdownConnection("Fehler beim prüfen von Nachrichten", e);
+				return;
 			}
 		};
 
