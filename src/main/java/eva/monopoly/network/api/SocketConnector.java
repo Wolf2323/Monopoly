@@ -1,34 +1,36 @@
 package eva.monopoly.network.api;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class SocketConnector
 {
-	final private static ScheduledExecutorService																		SCHEDULED_EXECUTOR	= new ScheduledThreadPoolExecutor(
-			1);
+	public final static Logger																							LOG					= LoggerFactory.getLogger(
+			SocketConnector.class);
+
+	final private static ExecutorService																				EXECUTOR			= Executors
+			.newCachedThreadPool();
 	final private static ExecutorService																				MESSAGE_DISPATCHER	= Executors
 			.newSingleThreadExecutor();
-	final private static long																							PERIOD				= 50;
 	final private static int																							TIMEOUT				= 15 * 1000;
 
 	private final Socket																								socket;
 	private ObjectOutputStream																							out;
 	private ObjectInputStream																							in;
-	private ScheduledFuture<?>																							future;
+	private Future<?>																									future;
 	private Consumer<HandlerException>																					shutdownHandler;
 
 	private final ConcurrentHashMap<Class<? extends ExchangeMessage>, ExchangeMessageHandle<? extends ExchangeMessage>>	handler				= new ConcurrentHashMap<>();
@@ -37,6 +39,8 @@ public class SocketConnector
 	{
 		this.socket = socket;
 		this.shutdownHandler = shutdownHandler;
+
+		registerHandle(ExchangeMessage.class, (msg) -> LOG.warn("There was an unhandled message of type {}: {}", msg.getClass().getSimpleName(), msg.toString()));
 	}
 
 	public void establishConnection()
@@ -74,40 +78,44 @@ public class SocketConnector
 
 		final Runnable runnable = () ->
 		{
-			try
+			LOG.debug("Start waiting for messages");
+			while(!future.isCancelled())
 			{
-				while(in.available() > 0 && !future.isCancelled())
+				try
 				{
-					try
-					{
-						final Object obj = in.readObject();
-						solveMessage((ExchangeMessage) obj);
-					}
-					catch(SocketException | SocketTimeoutException e)
-					{
-						shutdownConnection("Socket wurde unerwartet geschlossen!", e);
-						return;
-					}
-					catch(Exception e)
-					{
-						shutdownConnection("Fehler beim Empfangen der Nachricht", e);
-						return;
-					}
+					final Object obj = in.readObject();
+					LOG.debug("Received message of type: {}", obj.getClass().getSimpleName());
+					solveMessage((ExchangeMessage) obj);
 				}
-			}
-			catch(IOException e)
-			{
-				shutdownConnection("Fehler beim prüfen von Nachrichten", e);
-				return;
+				catch(InterruptedIOException e)
+				{
+					if(!future.isCancelled())
+					{
+						future.cancel(false);
+						shutdownConnection("Unexpected interrupt", e);
+					}
+					return;
+				}
+				catch(SocketException e)
+				{
+					shutdownConnection("Socket wurde unerwartet geschlossen!", e);
+					return;
+				}
+				catch(Exception e)
+				{
+					shutdownConnection("Fehler beim Empfangen der Nachricht", e);
+					return;
+				}
 			}
 		};
 
-		future = SCHEDULED_EXECUTOR.scheduleAtFixedRate(runnable, 1, PERIOD, TimeUnit.MILLISECONDS);
+		future = EXECUTOR.submit(runnable);
 	}
 
 	public void closeConnection() throws IOException
 	{
-		future.cancel(false);
+		out.flush();
+		future.cancel(true);
 		out.close();
 		in.close();
 		socket.close();
@@ -122,9 +130,11 @@ public class SocketConnector
 	{
 		try
 		{
+			LOG.debug("Waiting for sending Message");
 			synchronized(out)
 			{
 				out.writeObject(exchangeMessage);
+				LOG.debug("Send Message of type: {}", exchangeMessage.getClass().getSimpleName());
 			}
 			return true;
 		}
@@ -142,9 +152,20 @@ public class SocketConnector
 
 	private void solveMessage(ExchangeMessage obj)
 	{
-		final ExchangeMessageHandle<? extends ExchangeMessage> wrapper = handler.get(obj.getClass());
-
-		MESSAGE_DISPATCHER.execute(() -> wrapper.handle(obj));
+		Class<?> clazz = obj.getClass();
+		ExchangeMessageHandle<? extends ExchangeMessage> wrapper = handler.get(clazz);
+		while(wrapper == null)
+		{
+			clazz = clazz.getSuperclass();
+			if(clazz == null)
+			{
+				LOG.error("No handler registered for type hierarchy of class: {}. This should never happen!", obj.getClass().getSimpleName());
+				return;
+			}
+			wrapper = handler.get(clazz.getSuperclass());
+		}
+		final ExchangeMessageHandle<? extends ExchangeMessage> finWrapper = wrapper;
+		MESSAGE_DISPATCHER.execute(() -> finWrapper.handle(obj));
 	}
 
 	public <T extends ExchangeMessage> void registerHandle(Class<T> clazz, Consumer<T> consumer)

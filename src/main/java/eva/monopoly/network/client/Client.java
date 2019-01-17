@@ -4,8 +4,9 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eva.monopoly.network.api.HandlerException;
 import eva.monopoly.network.api.SocketConnector;
@@ -14,7 +15,7 @@ import eva.monopoly.network.api.messages.NameInfo;
 
 public class Client
 {
-	public final static Logger	LOGGER	= Logger.getLogger(Client.class.getName());
+	public final static Logger	LOG	= LoggerFactory.getLogger(Client.class);
 
 	private SocketConnector		socketConnector;
 	private String				remoteName;
@@ -24,26 +25,26 @@ public class Client
 		try
 		{
 			SocketConnector socketConnector = new SocketConnector(new Socket(host, port), shutdownHandler);
-			socketConnector.establishConnection();
-			socketConnector.sendMessage(new NameInfo(name));
 			socketConnector.registerHandle(NameInfo.class, nameInfo ->
 			{
 				this.socketConnector = socketConnector;
 				this.remoteName = nameInfo.getName();
-				LOGGER.log(Level.INFO, "Server Name: " + nameInfo.getName());
+				LOG.info("Server Name: {}", nameInfo.getName());
 			});
+			socketConnector.establishConnection();
+			socketConnector.sendMessage(new NameInfo(name));
 		}
 		catch(UnknownHostException e)
 		{
-			LOGGER.log(Level.SEVERE, "Ungültige Server Adresse: " + host, e);
+			LOG.error("Ungültige Server Adresse: {}", host, e);
 			throw e;
 		}
 		catch(IOException e)
 		{
-			LOGGER.log(Level.SEVERE, "Fehler bei der Initialisierung des Servers: " + host, e);
+			LOG.error("Fehler bei der Initialisierung des Servers: {}", host, e);
 			throw e;
 		}
-		LOGGER.log(Level.INFO, "Verbunden zu Server: " + host);
+		LOG.info("Verbunden zu Server: {}", host);
 	}
 
 	public void closeConnection()
@@ -51,7 +52,7 @@ public class Client
 		try
 		{
 			socketConnector.closeConnection();
-			LOGGER.log(Level.INFO, "Verbindung zum Server getrennt");
+			LOG.info("Verbindung zum Server getrennt");
 		}
 		catch(Exception e)
 		{

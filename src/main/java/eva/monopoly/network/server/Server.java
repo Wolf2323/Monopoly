@@ -2,29 +2,27 @@ package eva.monopoly.network.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eva.monopoly.network.api.ExchangeMessage;
 import eva.monopoly.network.api.HandlerException;
 import eva.monopoly.network.api.SocketConnector;
 import eva.monopoly.network.api.messages.NameInfo;
-import eva.monopoly.network.client.Client;
 
 
 public class Server
 {
-	public final static Logger					LOGGER				= Logger.getLogger(Client.class.getName());
+	public final static Logger					LOG					= LoggerFactory.getLogger(Server.class);
 
 	private HashMap<String, SocketConnector>	socketConnectors	= new HashMap<>();
 
 	private ServerSocket						serverSocket;
 
-	public Server(int port, String name, Consumer<HandlerException> shutdownHandler, Consumer<HandlerException> clientShutdownHandler) throws UnknownHostException,
-			IOException
+	public Server(int port, String name, Consumer<HandlerException> shutdownHandler) throws IOException
 	{
 		try
 		{
@@ -33,29 +31,29 @@ public class Server
 			{
 				try
 				{
-					SocketConnector client = new SocketConnector(serverSocket.accept(), clientShutdownHandler);
-					LOGGER.log(Level.INFO, "Verbunden mit Client: " + client.getSocket().getInetAddress().getHostAddress());
-					client.establishConnection();
-					client.sendMessage(new NameInfo(name));
+					SocketConnector client = new SocketConnector(serverSocket.accept(), shutdownHandler);
+					LOG.info("Verbunden mit Client: {}", client.getSocket().getInetAddress().getHostAddress());
 					client.registerHandle(NameInfo.class, nameInfo ->
 					{
 						socketConnectors.put(nameInfo.getName(), client);
-						LOGGER.log(Level.INFO, "Client  Name: " + nameInfo.getName());
+						LOG.info("Client  Name: {}", nameInfo.getName());
 					});
+					client.establishConnection();
+					client.sendMessage(new NameInfo(name));
 				}
 				catch(IOException e)
 				{
-					e.printStackTrace();
+					LOG.error("Fehler beim verbinden mit Client!", e);
 				}
 			};
 			new Thread(runnable).start();
 		}
 		catch(IOException e)
 		{
-			LOGGER.log(Level.SEVERE, "Fehler bei der Initialisierung des Servers: ", e);
+			LOG.error("Fehler bei der Initialisierung des Servers:", e);
 			throw e;
 		}
-		LOGGER.log(Level.INFO, "Server bestartet");
+		LOG.info("Server gestartet");
 	}
 
 	public void closeConnection()
@@ -65,11 +63,11 @@ public class Server
 			for(String connector : socketConnectors.keySet())
 			{
 				socketConnectors.get(connector).closeConnection();
-				LOGGER.log(Level.INFO, "Verbindung zu " + connector + " getrennt");
+				LOG.info("Verbindung zu {} getrennt", connector);
 				socketConnectors.remove(connector);
 			}
 			serverSocket.close();
-			LOGGER.log(Level.INFO, "Verbindung zu allen Clients getrennt");
+			LOG.info("Verbindung zu allen Clients getrennt");
 		}
 		catch(Exception e)
 		{
