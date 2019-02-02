@@ -18,6 +18,7 @@ public class StartupController {
 	TextField nickname;
 	@FXML
 	Button okBttn;
+
 	public void enterNickname(ActionEvent event) throws IOException {
 		// set Playername from Textfield nickname and switch to mainMenu.fxml
 		FXMLLoader loader = new FXMLLoader();
@@ -32,4 +33,3 @@ public class StartupController {
 		window.show();
 	}
 }
-

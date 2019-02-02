@@ -10,7 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-public class GameBoardController implements Initializable{
+public class GameBoardController implements Initializable {
 	@FXML
 	Button cards;
 	@FXML
@@ -19,9 +19,9 @@ public class GameBoardController implements Initializable{
 	TextField money;
 	@FXML
 	Label playerName;
-	
+
 	private String uName;
-	
+
 	public void initData(String uName) {
 		this.uName = uName;
 	}
@@ -45,9 +45,9 @@ public class GameBoardController implements Initializable{
 
 	public void showRoundData() {
 		/*
-		 * show Dice roll, show data of target field, give button options to buy
-		 * or ignore if field is not occupied, give option to place house if
-		 * target field and corresponding street is owned by the player
+		 * show Dice roll, show data of target field, give button options to buy or
+		 * ignore if field is not occupied, give option to place house if target field
+		 * and corresponding street is owned by the player
 		 */
 	}
 

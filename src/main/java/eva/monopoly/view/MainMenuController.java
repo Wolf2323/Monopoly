@@ -30,10 +30,10 @@ public class MainMenuController implements Initializable {
 	Button nicknameBttn;
 	@FXML
 	Label uNameLabel;
-	
+
 	private String uName;
-	
-	public void initData(String nickname){
+
+	public void initData(String nickname) {
 		uName = nickname;
 	}
 
@@ -83,7 +83,7 @@ public class MainMenuController implements Initializable {
 		Button okBttn = new Button("Continue");
 		Button cancelBttn = new Button("Cancel");
 		okBttn.setOnAction(e -> {
-			//get IP from TextField ipField.getText();
+			// get IP from TextField ipField.getText();
 			newWindow.close();
 			Parent gameBoardParent;
 			try {
