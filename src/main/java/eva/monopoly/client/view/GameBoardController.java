@@ -31,11 +31,11 @@ public class GameBoardController implements Initializable {
 		money.setText("" + player.getMoney());
 	}
 
-	private void showCards() {
+	public void showCards() {
 		// get Cards from Player and show it in an alert window
 	}
 
-	private void showStreets() {
+	public void showStreets() {
 		// get Streets from Player and show it in an alert window
 	}
 

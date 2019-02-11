@@ -37,7 +37,7 @@ public class MainMenuController implements Initializable {
 		uName = nickname;
 	}
 
-	private void startGame(ActionEvent event) throws UnknownHostException {
+	public void startGame(ActionEvent event) throws UnknownHostException {
 		InetAddress inet = InetAddress.getLocalHost();
 		Stage newWindow = new Stage();
 		newWindow.initModality(Modality.APPLICATION_MODAL);
@@ -70,7 +70,7 @@ public class MainMenuController implements Initializable {
 		newWindow.showAndWait();
 	}
 
-	private void findGame(ActionEvent event) {
+	public void findGame(ActionEvent event) {
 		// find Game with a different host, show window to enter ip
 		Stage newWindow = new Stage();
 		Boolean test = true;
@@ -106,7 +106,7 @@ public class MainMenuController implements Initializable {
 		newWindow.showAndWait();
 	}
 
-	private void changeNick(ActionEvent event) throws IOException {
+	public void changeNick(ActionEvent event) throws IOException {
 		Parent startUpParent = FXMLLoader.load(getClass().getResource("startupWindow.fxml"));
 		Scene startUp = new Scene(startUpParent);
 		Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
