@@ -30,44 +30,11 @@ public class MainMenuController implements Initializable {
 	Button nicknameBttn;
 	@FXML
 	Label uNameLabel;
-
 	private String uName;
 
 	public void initData(String nickname) {
 		uName = nickname;
-	}
-
-	public void startGame(ActionEvent event) throws UnknownHostException {
-		InetAddress inet = InetAddress.getLocalHost();
-		Stage newWindow = new Stage();
-		newWindow.initModality(Modality.APPLICATION_MODAL);
-		newWindow.setTitle("Start Game");
-		newWindow.setMinWidth(500);
-		Label label = new Label();
-		label.setText("Current IP Address: " + inet.getHostAddress());
-		Button okBttn = new Button("START");
-		Button cancelBttn = new Button("Cancel");
-		okBttn.setOnAction(e -> {
-			newWindow.close();
-			Parent gameBoardParent;
-			try {
-				gameBoardParent = FXMLLoader.load(getClass().getResource("gameBoard.fxml"));
-				Scene gameBoard = new Scene(gameBoardParent);
-				Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-				window.setScene(gameBoard);
-				window.show();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		});
-		cancelBttn.setOnAction(e -> newWindow.close());
-		VBox layout = new VBox(10);
-		layout.getChildren().addAll(label, okBttn, cancelBttn);
-		layout.setAlignment(Pos.CENTER);
-		Scene scene = new Scene(layout);
-		newWindow.setScene(scene);
-		newWindow.showAndWait();
+		uNameLabel.setText("Hello, " + uName);
 	}
 
 	public void findGame(ActionEvent event) {
@@ -116,6 +83,5 @@ public class MainMenuController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		uNameLabel.setText("Hello, " + uName);
 	}
 }
