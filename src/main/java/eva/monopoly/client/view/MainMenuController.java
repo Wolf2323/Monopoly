@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -17,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -40,13 +42,19 @@ public class MainMenuController implements Initializable {
 	public void findGame(ActionEvent event) {
 		// find Game with a different host, show window to enter ip
 		Stage newWindow = new Stage();
-		Boolean test = true;
 		newWindow.initModality(Modality.APPLICATION_MODAL);
 		newWindow.setTitle("Find Game");
 		newWindow.setMinWidth(500);
-		Label label = new Label();
-		label.setText("Enter IP Address");
+		HBox ipAndPort = new HBox();
+		ipAndPort.setAlignment(Pos.CENTER);
+		Label separator = new Label();
+		separator.setText(" : ");
 		TextField ipField = new TextField();
+		ipField.setPromptText("Enter IP");
+		TextField portField = new TextField();
+		portField.setPromptText("Enter Port");
+		portField.setMaxWidth(100);
+		ipAndPort.getChildren().addAll(ipField, separator, portField);
 		Button okBttn = new Button("Continue");
 		Button cancelBttn = new Button("Cancel");
 		okBttn.setOnAction(e -> {
@@ -66,7 +74,9 @@ public class MainMenuController implements Initializable {
 		});
 		cancelBttn.setOnAction(e -> newWindow.close());
 		VBox layout = new VBox(10);
-		layout.getChildren().addAll(label, okBttn, cancelBttn);
+		layout.setAlignment(Pos.CENTER);
+		layout.setPadding(new Insets(10, 10, 10, 10));
+		layout.getChildren().addAll(ipAndPort, okBttn, cancelBttn);
 		layout.setAlignment(Pos.CENTER);
 		Scene scene = new Scene(layout);
 		newWindow.setScene(scene);
