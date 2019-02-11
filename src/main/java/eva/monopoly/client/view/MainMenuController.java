@@ -6,7 +6,9 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ResourceBundle;
 
+import eva.monopoly.api.network.client.Client;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -17,7 +19,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -33,6 +37,7 @@ public class MainMenuController implements Initializable {
 	@FXML
 	Label uNameLabel;
 	private String uName;
+	private Client client;
 
 	public void initData(String nickname) {
 		uName = nickname;
@@ -54,23 +59,16 @@ public class MainMenuController implements Initializable {
 		TextField portField = new TextField();
 		portField.setPromptText("Enter Port");
 		portField.setMaxWidth(100);
+		portField.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				sendIpAndPort(newWindow, ipField.getText(), portField.getText(), event);
+			}
+		});
 		ipAndPort.getChildren().addAll(ipField, separator, portField);
 		Button okBttn = new Button("Continue");
 		Button cancelBttn = new Button("Cancel");
 		okBttn.setOnAction(e -> {
-			// get IP from TextField ipField.getText();
-			newWindow.close();
-			Parent gameBoardParent;
-			try {
-				gameBoardParent = FXMLLoader.load(getClass().getResource("gameBoard.fxml"));
-				Scene gameBoard = new Scene(gameBoardParent);
-				Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-				window.setScene(gameBoard);
-				window.show();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			sendIpAndPort(newWindow, ipField.getText(), portField.getText(), event);
 		});
 		cancelBttn.setOnAction(e -> newWindow.close());
 		VBox layout = new VBox(10);
@@ -89,6 +87,54 @@ public class MainMenuController implements Initializable {
 		Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		window.setScene(startUp);
 		window.show();
+	}
+
+	private void sendIpAndPort(Stage stage, String ip, String port, ActionEvent event) {
+		try {
+			client = new Client(ip, Integer.parseInt(port), uName, null);
+		} catch (NumberFormatException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		} catch (UnknownHostException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		stage.close();
+		Stage newWindow = new Stage();
+		newWindow.initModality(Modality.APPLICATION_MODAL);
+		newWindow.setTitle("Pre-Game Lobby");
+		newWindow.setMinWidth(500);
+		TableView connectedPlayers = new TableView();
+		
+		Button readyBttn = new Button("Ready");
+		Button cancelBttn = new Button("Cancel");
+		readyBttn.setOnAction(e -> {
+			//TODO Code ist Platzhalter
+			Parent gameBoardParent;
+			try {
+				gameBoardParent = FXMLLoader.load(getClass().getResource("gameBoard.fxml"));
+				Scene gameBoard = new Scene(gameBoardParent);
+				Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+				window.setScene(gameBoard);
+				window.show();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
+		cancelBttn.setOnAction(e -> newWindow.close());
+		VBox layout = new VBox(10);
+		layout.setAlignment(Pos.CENTER);
+		layout.setPadding(new Insets(10, 10, 10, 10));
+		layout.getChildren().addAll(readyBttn, cancelBttn);
+		layout.setAlignment(Pos.CENTER);
+		Scene scene = new Scene(layout);
+		newWindow.setScene(scene);
+		newWindow.showAndWait();
+		
 	}
 
 	@Override
