@@ -8,14 +8,14 @@
 		<log4j.version>2.11.1</log4j.version>
 	</properties>
 
-	<groupId>eva.monopolyclient</groupId>
+	<groupId>eva.monopoly.client</groupId>
 	<artifactId>Monopoly</artifactId>
 	<version>1.0-Snapshot</version>
 	<name>Monopoly</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>eva.monopolyapi</groupId>
+			<groupId>eva.monopoly.api</groupId>
 			<artifactId>MonopolyAPI</artifactId>
 			<version>1.0-Snapshot</version>
 		</dependency>
