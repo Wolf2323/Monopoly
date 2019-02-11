@@ -1,8 +1,8 @@
-package eva.monopoly.view;
+package eva.monopoly.client.view;
 
 import java.io.IOException;
 
-import eva.monopoly.game.player.Player;
+import eva.monopolyapi.game.player.Player;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

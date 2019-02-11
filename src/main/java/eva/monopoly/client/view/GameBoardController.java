@@ -1,9 +1,9 @@
-package eva.monopoly.view;
+package eva.monopoly.client.view;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import eva.monopoly.game.player.Player;
+import eva.monopolyapi.game.player.Player;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
