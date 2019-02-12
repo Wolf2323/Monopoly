@@ -7,6 +7,8 @@ import java.net.UnknownHostException;
 import java.util.ResourceBundle;
 
 import eva.monopoly.api.network.client.Client;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -18,12 +20,17 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -72,7 +79,6 @@ public class MainMenuController implements Initializable {
 		});
 		cancelBttn.setOnAction(e -> newWindow.close());
 		VBox layout = new VBox(10);
-		layout.setAlignment(Pos.CENTER);
 		layout.setPadding(new Insets(10, 10, 10, 10));
 		layout.getChildren().addAll(ipAndPort, okBttn, cancelBttn);
 		layout.setAlignment(Pos.CENTER);
@@ -90,7 +96,7 @@ public class MainMenuController implements Initializable {
 	}
 
 	private void sendIpAndPort(Stage stage, String ip, String port, ActionEvent event) {
-		try {
+		/* try {
 			client = new Client(ip, Integer.parseInt(port), uName, null);
 		} catch (NumberFormatException e2) {
 			// TODO Auto-generated catch block
@@ -102,19 +108,45 @@ public class MainMenuController implements Initializable {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-		stage.close();
-		Stage newWindow = new Stage();
-		newWindow.initModality(Modality.APPLICATION_MODAL);
+		*/
+		Stage newWindow = stage;
 		newWindow.setTitle("Pre-Game Lobby");
 		newWindow.setMinWidth(500);
+		Label tabelLabel = new Label("Players");
+		tabelLabel.setFont(new Font("Arial", 20));
 		TableView connectedPlayers = new TableView();
-		
+		TableColumn name = new TableColumn("Name");
+        TableColumn pawn = new TableColumn("Pawn");
+        TableColumn ready = new TableColumn("Ready");
+        name.setPrefWidth(200);
+        pawn.setPrefWidth(100);
+        ready.setPrefWidth(100);
+		connectedPlayers.getColumns().addAll(name, pawn, ready);
+		HBox bottom = new HBox(10);
+		bottom.setPadding(new Insets(10, 10, 10, 10));
+		bottom.setAlignment(Pos.CENTER);
+		VBox buttons = new VBox(10);
+		buttons.setPadding(new Insets(10, 10, 10, 10));
 		Button readyBttn = new Button("Ready");
 		Button cancelBttn = new Button("Cancel");
+		buttons.getChildren().addAll(readyBttn, cancelBttn);
+		VBox pawnBox = new VBox(10);
+		pawnBox.setPadding(new Insets(10, 10, 10, 10));
+		Label pawnLabel = new Label("Choose Pawn");
+		ComboBox<String> pawns = new ComboBox<>();
+		ObservableList<String> c = FXCollections.observableArrayList();
+		c.addAll("TOPHAT", "THIMBLE", "IRON", "SHOE", "BATTLESHIP", "WHEELBARROW", "DOG", "CAR");
+		pawns.setItems(c);
+		pawns.setOnAction((e -> {
+			//TODO notify server of Pawn Selection, check if possible, notify user if pawn is not available
+		}));
+		pawnBox.getChildren().addAll(pawnLabel, pawns);
+		bottom.getChildren().addAll(buttons, pawnBox);
 		readyBttn.setOnAction(e -> {
-			//TODO Code ist Platzhalter
+			//TODO Code is placeholder,check if a pawn is selected(notify if not), notify Server of ready status
 			Parent gameBoardParent;
 			try {
+				newWindow.close();
 				gameBoardParent = FXMLLoader.load(getClass().getResource("gameBoard.fxml"));
 				Scene gameBoard = new Scene(gameBoardParent);
 				Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -127,14 +159,11 @@ public class MainMenuController implements Initializable {
 		});
 		cancelBttn.setOnAction(e -> newWindow.close());
 		VBox layout = new VBox(10);
-		layout.setAlignment(Pos.CENTER);
 		layout.setPadding(new Insets(10, 10, 10, 10));
-		layout.getChildren().addAll(readyBttn, cancelBttn);
+		layout.getChildren().addAll(tabelLabel, connectedPlayers, bottom);
 		layout.setAlignment(Pos.CENTER);
 		Scene scene = new Scene(layout);
 		newWindow.setScene(scene);
-		newWindow.showAndWait();
-		
 	}
 
 	@Override
