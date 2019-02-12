@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 import java.util.ResourceBundle;
 
 import eva.monopoly.api.network.client.Client;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,6 +23,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -43,6 +45,8 @@ public class MainMenuController implements Initializable {
 	Button nicknameBttn;
 	@FXML
 	Label uNameLabel;
+	@FXML
+	MenuBar menuBar;
 	private String uName;
 	private Client client;
 
@@ -90,25 +94,19 @@ public class MainMenuController implements Initializable {
 	public void changeNick(ActionEvent event) throws IOException {
 		Parent startUpParent = FXMLLoader.load(getClass().getResource("startupWindow.fxml"));
 		Scene startUp = new Scene(startUpParent);
-		Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		Stage window = (Stage) menuBar.getScene().getWindow();
 		window.setScene(startUp);
 		window.show();
 	}
 
 	private void goToGameLobby(Stage stage, String ip, String port, ActionEvent event) {
-		/* try {
-			client = new Client(ip, Integer.parseInt(port), uName, null);
-		} catch (NumberFormatException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		} catch (UnknownHostException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		} catch (IOException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-		*/
+		/*
+		 * try { client = new Client(ip, Integer.parseInt(port), uName, null); }
+		 * catch (NumberFormatException e2) { // TODO Auto-generated catch block
+		 * e2.printStackTrace(); } catch (UnknownHostException e2) { // TODO
+		 * Auto-generated catch block e2.printStackTrace(); } catch (IOException
+		 * e2) { // TODO Auto-generated catch block e2.printStackTrace(); }
+		 */
 		Stage newWindow = stage;
 		newWindow.setTitle("Pre-Game Lobby");
 		newWindow.setMinWidth(500);
@@ -116,11 +114,11 @@ public class MainMenuController implements Initializable {
 		tabelLabel.setFont(new Font("Arial", 20));
 		TableView connectedPlayers = new TableView();
 		TableColumn name = new TableColumn("Name");
-        TableColumn pawn = new TableColumn("Pawn");
-        TableColumn ready = new TableColumn("Ready");
-        name.setPrefWidth(200);
-        pawn.setPrefWidth(100);
-        ready.setPrefWidth(100);
+		TableColumn pawn = new TableColumn("Pawn");
+		TableColumn ready = new TableColumn("Ready");
+		name.setPrefWidth(200);
+		pawn.setPrefWidth(100);
+		ready.setPrefWidth(100);
 		connectedPlayers.getColumns().addAll(name, pawn, ready);
 		HBox bottom = new HBox(10);
 		bottom.setPadding(new Insets(10, 10, 10, 10));
@@ -138,18 +136,20 @@ public class MainMenuController implements Initializable {
 		c.addAll("TOPHAT", "THIMBLE", "IRON", "SHOE", "BATTLESHIP", "WHEELBARROW", "DOG", "CAR");
 		pawns.setItems(c);
 		pawns.setOnAction((e -> {
-			//TODO notify server of Pawn Selection, check if possible, notify user if pawn is not available
+			// TODO notify server of Pawn Selection, check if possible, notify
+			// user if pawn is not available
 		}));
 		pawnBox.getChildren().addAll(pawnLabel, pawns);
 		bottom.getChildren().addAll(buttons, pawnBox);
 		readyBttn.setOnAction(e -> {
-			//TODO Code is placeholder,check if a pawn is selected(notify if not), notify Server of ready status
+			// TODO Code is placeholder,check if a pawn is selected(notify if
+			// not), notify Server of ready status
 			Parent gameBoardParent;
 			try {
 				newWindow.close();
 				gameBoardParent = FXMLLoader.load(getClass().getResource("gameBoard.fxml"));
 				Scene gameBoard = new Scene(gameBoardParent);
-				Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+				Stage window = (Stage) menuBar.getScene().getWindow();
 				window.setScene(gameBoard);
 				window.show();
 			} catch (IOException e1) {
@@ -164,6 +164,10 @@ public class MainMenuController implements Initializable {
 		layout.setAlignment(Pos.CENTER);
 		Scene scene = new Scene(layout);
 		newWindow.setScene(scene);
+	}
+
+	public void menuClose(ActionEvent event) throws IOException {
+		Platform.exit();
 	}
 
 	@Override

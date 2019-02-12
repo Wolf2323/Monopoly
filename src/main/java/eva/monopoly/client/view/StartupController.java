@@ -2,6 +2,7 @@ package eva.monopoly.client.view;
 
 import java.io.IOException;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -30,15 +31,18 @@ public class StartupController {
 	}
 	public void nicknameAction(Event event) throws IOException {
 		// set Playername from Textfield nickname and switch to mainMenu.fxml
-				FXMLLoader loader = new FXMLLoader();
-				loader.setLocation(getClass().getResource("mainMenu.fxml"));
-				Parent mainMenuParent = loader.load();
-				Scene mainMenu = new Scene(mainMenuParent);
-				String uName = nickname.getText();
-				MainMenuController menuControl = loader.getController();
-				menuControl.initData(uName);
-				Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-				window.setScene(mainMenu);
-				window.show();
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("mainMenu.fxml"));
+		Parent mainMenuParent = loader.load();
+		Scene mainMenu = new Scene(mainMenuParent);
+		String uName = nickname.getText();
+		MainMenuController menuControl = loader.getController();
+		menuControl.initData(uName);
+		Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		window.setScene(mainMenu);
+		window.show();
+	}
+	public void menuClose(ActionEvent event) throws IOException {
+		Platform.exit();
 	}
 }
