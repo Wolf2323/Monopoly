@@ -68,14 +68,14 @@ public class MainMenuController implements Initializable {
 		portField.setMaxWidth(100);
 		portField.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
-				sendIpAndPort(newWindow, ipField.getText(), portField.getText(), event);
+				goToGameLobby(newWindow, ipField.getText(), portField.getText(), event);
 			}
 		});
 		ipAndPort.getChildren().addAll(ipField, separator, portField);
 		Button okBttn = new Button("Continue");
 		Button cancelBttn = new Button("Cancel");
 		okBttn.setOnAction(e -> {
-			sendIpAndPort(newWindow, ipField.getText(), portField.getText(), event);
+			goToGameLobby(newWindow, ipField.getText(), portField.getText(), event);
 		});
 		cancelBttn.setOnAction(e -> newWindow.close());
 		VBox layout = new VBox(10);
@@ -95,7 +95,7 @@ public class MainMenuController implements Initializable {
 		window.show();
 	}
 
-	private void sendIpAndPort(Stage stage, String ip, String port, ActionEvent event) {
+	private void goToGameLobby(Stage stage, String ip, String port, ActionEvent event) {
 		/* try {
 			client = new Client(ip, Integer.parseInt(port), uName, null);
 		} catch (NumberFormatException e2) {
