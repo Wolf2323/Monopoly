@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 import java.util.ResourceBundle;
 
 import eva.monopoly.api.network.client.Client;
+import eva.monopoly.client.Monopoly;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -107,6 +108,13 @@ public class MainMenuController implements Initializable {
 		 * Auto-generated catch block e2.printStackTrace(); } catch (IOException
 		 * e2) { // TODO Auto-generated catch block e2.printStackTrace(); }
 		 */
+		try {
+			Monopoly.initializeClient(ip, Integer.parseInt(port), uName);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		Stage newWindow = stage;
 		newWindow.setTitle("Pre-Game Lobby");
 		newWindow.setMinWidth(500);
@@ -153,7 +161,6 @@ public class MainMenuController implements Initializable {
 				window.setScene(gameBoard);
 				window.show();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		});
