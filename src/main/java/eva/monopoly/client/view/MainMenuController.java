@@ -1,13 +1,15 @@
 package eva.monopoly.client.view;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 
 import eva.monopoly.api.network.client.Client;
-import eva.monopoly.client.Monopoly;
+import eva.monopoly.client.MonopolyClient;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -33,6 +35,7 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -48,8 +51,12 @@ public class MainMenuController implements Initializable {
 	Label uNameLabel;
 	@FXML
 	MenuBar menuBar;
+	private boolean isPawnError = false;
 	private String uName;
-	private Client client;
+	private Pattern p = Pattern.compile("^" + "(((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}" // Domain name
+			+ "|" + "localhost" // localhost
+			+ "|" + "(([0-9]{1,3}\\.){3})[0-9]{1,3})" // Ip
+			+ ":" + "[0-9]{1,5}$"); // Port
 
 	public void initData(String nickname) {
 		uName = nickname;
@@ -73,14 +80,24 @@ public class MainMenuController implements Initializable {
 		portField.setMaxWidth(100);
 		portField.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
-				goToGameLobby(newWindow, ipField.getText(), portField.getText(), event);
+				try {
+					goToGameLobby(newWindow, ipField.getText(), portField.getText(), event);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		ipAndPort.getChildren().addAll(ipField, separator, portField);
 		Button okBttn = new Button("Continue");
 		Button cancelBttn = new Button("Cancel");
 		okBttn.setOnAction(e -> {
-			goToGameLobby(newWindow, ipField.getText(), portField.getText(), event);
+			try {
+				goToGameLobby(newWindow, ipField.getText(), portField.getText(), event);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		});
 		cancelBttn.setOnAction(e -> newWindow.close());
 		VBox layout = new VBox(10);
@@ -100,24 +117,24 @@ public class MainMenuController implements Initializable {
 		window.show();
 	}
 
-	private void goToGameLobby(Stage stage, String ip, String port, ActionEvent event) {
-		/*
-		 * try { client = new Client(ip, Integer.parseInt(port), uName, null); }
-		 * catch (NumberFormatException e2) { // TODO Auto-generated catch block
-		 * e2.printStackTrace(); } catch (UnknownHostException e2) { // TODO
-		 * Auto-generated catch block e2.printStackTrace(); } catch (IOException
-		 * e2) { // TODO Auto-generated catch block e2.printStackTrace(); }
-		 */
+	private void goToGameLobby(Stage stage, String ip, String port, ActionEvent event) throws IOException {
+		// TODO entferene HACK
+		if (!p.matcher(ip + ":" + port).matches() && !ip.equalsIgnoreCase("Hack")) {
+			errorWindow(stage, event, ip, port, "input");
+			return;
+		}
 		try {
-			Monopoly.initializeClient(ip, Integer.parseInt(port), uName);
-		} catch (UnknownHostException e) {
+			MonopolyClient.initializeClient(ip, Integer.parseInt(port), uName);
+		} catch (ConnectException e) {
+			// TODO Better Exception handling
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			if (!ip.equalsIgnoreCase("Hack")) {
+				errorWindow(stage, event, ip, port, "connection");
+				return;
+			}
 		}
 		Stage newWindow = stage;
 		newWindow.setTitle("Pre-Game Lobby");
-		newWindow.setMinWidth(500);
 		Label tabelLabel = new Label("Players");
 		tabelLabel.setFont(new Font("Arial", 20));
 		TableView connectedPlayers = new TableView();
@@ -154,12 +171,22 @@ public class MainMenuController implements Initializable {
 			// not), notify Server of ready status
 			Parent gameBoardParent;
 			try {
-				newWindow.close();
-				gameBoardParent = FXMLLoader.load(getClass().getResource("gameBoard.fxml"));
-				Scene gameBoard = new Scene(gameBoardParent);
-				Stage window = (Stage) menuBar.getScene().getWindow();
-				window.setScene(gameBoard);
-				window.show();
+				if (pawns.getSelectionModel().getSelectedItem() == null) {
+					if (!isPawnError) {
+						pawns.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
+						Label errorLabel = new Label("Bitte eine Spielfigur auswählen!");
+						errorLabel.setTextFill(Color.RED);
+						pawnBox.getChildren().add(errorLabel);
+						isPawnError = true;
+					}
+				} else {
+					newWindow.close();
+					gameBoardParent = FXMLLoader.load(getClass().getResource("gameBoard.fxml"));
+					Scene gameBoard = new Scene(gameBoardParent);
+					Stage window = (Stage) menuBar.getScene().getWindow();
+					window.setScene(gameBoard);
+					window.show();
+				}
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
@@ -168,6 +195,59 @@ public class MainMenuController implements Initializable {
 		VBox layout = new VBox(10);
 		layout.setPadding(new Insets(10, 10, 10, 10));
 		layout.getChildren().addAll(tabelLabel, connectedPlayers, bottom);
+		layout.setAlignment(Pos.CENTER);
+		Scene scene = new Scene(layout);
+		newWindow.setScene(scene);
+	}
+
+	private void errorWindow(Stage stage, ActionEvent event, String ip, String port, String type) {
+		Stage newWindow = stage;
+		newWindow.setTitle("Find Game");
+		HBox ipAndPort = new HBox();
+		ipAndPort.setAlignment(Pos.CENTER);
+		Label separator = new Label();
+		separator.setText(" : ");
+		TextField ipField = new TextField();
+		ipField.setPromptText("Enter IP");
+		ipField.setText(ip);
+		ipField.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
+		TextField portField = new TextField();
+		portField.setPromptText("Enter Port");
+		portField.setText(port);
+		portField.setMaxWidth(100);
+		portField.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
+		portField.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				try {
+					goToGameLobby(newWindow, ipField.getText(), portField.getText(), event);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		ipAndPort.getChildren().addAll(ipField, separator, portField);
+		Button okBttn = new Button("Continue");
+		Button cancelBttn = new Button("Cancel");
+		okBttn.setOnAction(e -> {
+			try {
+				goToGameLobby(newWindow, ipField.getText(), portField.getText(), event);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
+		cancelBttn.setOnAction(e -> newWindow.close());
+		Label errorMessage = new Label();
+		if (type.equalsIgnoreCase("input")) {
+			errorMessage.setText("Keine gültige IP und Port Eingabe!");
+		} else if (type.equalsIgnoreCase("connection")) {
+			errorMessage.setText("Verbindung zu diesem Server nicht möglich!");
+		}
+		errorMessage.setTextFill(Color.RED);
+		VBox layout = new VBox(10);
+		layout.setPadding(new Insets(10, 10, 10, 10));
+		layout.getChildren().addAll(ipAndPort, errorMessage, okBttn, cancelBttn);
 		layout.setAlignment(Pos.CENTER);
 		Scene scene = new Scene(layout);
 		newWindow.setScene(scene);
