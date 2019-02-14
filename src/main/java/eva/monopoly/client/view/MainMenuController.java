@@ -51,7 +51,8 @@ public class MainMenuController implements Initializable {
 	Label uNameLabel;
 	@FXML
 	MenuBar menuBar;
-	private boolean isPawnError = false;
+	private boolean isPawnErrorNotSelected = false;
+	private boolean isPawnErrorWrongSelected = false;
 	private String uName;
 	private Pattern p = Pattern.compile("^" + "(((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}" // Domain name
 			+ "|" + "localhost" // localhost
@@ -125,7 +126,7 @@ public class MainMenuController implements Initializable {
 		}
 		try {
 			MonopolyClient.initializeClient(ip, Integer.parseInt(port), uName);
-		} catch (ConnectException e) {
+		} catch (IOException e) {
 			// TODO Better Exception handling
 			e.printStackTrace();
 			if (!ip.equalsIgnoreCase("Hack")) {
@@ -161,8 +162,10 @@ public class MainMenuController implements Initializable {
 		c.addAll("TOPHAT", "THIMBLE", "IRON", "SHOE", "BATTLESHIP", "WHEELBARROW", "DOG", "CAR");
 		pawns.setItems(c);
 		pawns.setOnAction((e -> {
-			// TODO notify server of Pawn Selection, check if possible, notify
-			// user if pawn is not available
+			if (pawns.getSelectionModel().getSelectedItem() != null) {
+				String pawnSelection = pawns.getSelectionModel().getSelectedItem();
+				MonopolyClient.notifyServerPawnChanged(pawnSelection);
+			}
 		}));
 		pawnBox.getChildren().addAll(pawnLabel, pawns);
 		bottom.getChildren().addAll(buttons, pawnBox);
@@ -172,12 +175,12 @@ public class MainMenuController implements Initializable {
 			Parent gameBoardParent;
 			try {
 				if (pawns.getSelectionModel().getSelectedItem() == null) {
-					if (!isPawnError) {
+					if (!isPawnErrorNotSelected) {
 						pawns.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
 						Label errorLabel = new Label("Bitte eine Spielfigur auswählen!");
 						errorLabel.setTextFill(Color.RED);
 						pawnBox.getChildren().add(errorLabel);
-						isPawnError = true;
+						isPawnErrorNotSelected = true;
 					}
 				} else {
 					newWindow.close();

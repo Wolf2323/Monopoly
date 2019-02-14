@@ -26,21 +26,28 @@ public class StartupController {
 	Button okBttn;
 	@FXML
 	VBox layout;
+	private boolean errorAlreadyShown = false;
+
 	public void nicknameOk(ActionEvent event) throws IOException {
 		nicknameAction(event);
 	}
+
 	public void nicknameEnter(KeyEvent event) throws IOException {
-		if (event.getCode() == KeyCode.ENTER)  {
-            nicknameAction(event);
-       }
+		if (event.getCode() == KeyCode.ENTER) {
+			nicknameAction(event);
+		}
 	}
+
 	public void nicknameAction(Event event) throws IOException {
 		// set Playername from Textfield nickname and switch to mainMenu.fxml
 		if (nickname.getText().equals("")) {
-			nickname.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-			Label errorMessage = new Label("Bitte einen Nicknamen eingeben!");
-			errorMessage.setTextFill(Color.RED);
-			layout.getChildren().add(2, errorMessage);
+			if (!errorAlreadyShown) {
+				nickname.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
+				Label errorMessage = new Label("Bitte einen Nicknamen eingeben!");
+				errorMessage.setTextFill(Color.RED);
+				layout.getChildren().add(2, errorMessage);
+				errorAlreadyShown = true;
+			}
 			return;
 		}
 		FXMLLoader loader = new FXMLLoader();
@@ -54,6 +61,7 @@ public class StartupController {
 		window.setScene(mainMenu);
 		window.show();
 	}
+
 	public void menuClose(ActionEvent event) throws IOException {
 		Platform.exit();
 	}

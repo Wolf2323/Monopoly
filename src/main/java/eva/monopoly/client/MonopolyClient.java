@@ -6,7 +6,9 @@ import java.net.UnknownHostException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eva.monopoly.api.game.player.Player.Pawn;
 import eva.monopoly.api.network.client.Client;
+import eva.monopoly.api.network.messages.PawnChanged;
 import eva.monopoly.api.network.messages.PlayerStatusChanged;
 import eva.monopoly.api.network.messages.PlayerStatusChanged.ConnectionState;
 import javafx.application.Application;
@@ -68,5 +70,23 @@ public class MonopolyClient extends Application {
 				return;
 			}
 		});
+	}
+
+	public static void notifyServerPawnChanged(String pawnSelection) {
+		if (pawnSelection.equalsIgnoreCase("Tophat")) {
+			client.getSocketConnector().sendMessage(new PawnChanged(Pawn.TOPHAT));
+		} else if (pawnSelection.equalsIgnoreCase("Iron")) {
+			client.getSocketConnector().sendMessage(new PawnChanged(Pawn.IRON));
+		} else if (pawnSelection.equalsIgnoreCase("Shoe")) {
+			client.getSocketConnector().sendMessage(new PawnChanged(Pawn.SHOE));
+		} else if (pawnSelection.equalsIgnoreCase("Battleship")) {
+			client.getSocketConnector().sendMessage(new PawnChanged(Pawn.BATTLESHIP));
+		} else if (pawnSelection.equalsIgnoreCase("Wheelbarrow")) {
+			client.getSocketConnector().sendMessage(new PawnChanged(Pawn.WHEELBARROW));
+		} else if (pawnSelection.equalsIgnoreCase("Dog")) {
+			client.getSocketConnector().sendMessage(new PawnChanged(Pawn.DOG));
+		} else if (pawnSelection.equalsIgnoreCase("Car")) {
+			client.getSocketConnector().sendMessage(new PawnChanged(Pawn.CAR));
+		}
 	}
 }
