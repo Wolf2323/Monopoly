@@ -8,6 +8,8 @@ import java.net.UnknownHostException;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
+import eva.monopoly.api.game.player.Player;
+import eva.monopoly.api.game.player.Player.Pawn;
 import eva.monopoly.api.network.client.Client;
 import eva.monopoly.client.MonopolyClient;
 import javafx.application.Platform;
@@ -53,6 +55,7 @@ public class MainMenuController implements Initializable {
 	MenuBar menuBar;
 	private boolean isPawnErrorNotSelected = false;
 	private boolean isPawnErrorWrongSelected = false;
+	private ObservableList<Player> tableItems = FXCollections.observableArrayList();
 	private String uName;
 	private Pattern p = Pattern.compile("^" + "(((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}" // Domain name
 			+ "|" + "localhost" // localhost
@@ -126,7 +129,7 @@ public class MainMenuController implements Initializable {
 		}
 		try {
 			MonopolyClient.initializeClient(ip, Integer.parseInt(port), uName);
-		} catch (IOException e) {
+		} catch (IOException | NumberFormatException e) {
 			// TODO Better Exception handling
 			e.printStackTrace();
 			if (!ip.equalsIgnoreCase("Hack")) {
@@ -138,14 +141,16 @@ public class MainMenuController implements Initializable {
 		newWindow.setTitle("Pre-Game Lobby");
 		Label tabelLabel = new Label("Players");
 		tabelLabel.setFont(new Font("Arial", 20));
-		TableView connectedPlayers = new TableView();
+		TableView<Player> connectedPlayers = new TableView<>();
 		TableColumn name = new TableColumn("Name");
 		TableColumn pawn = new TableColumn("Pawn");
 		TableColumn ready = new TableColumn("Ready");
 		name.setPrefWidth(200);
 		pawn.setPrefWidth(100);
 		ready.setPrefWidth(100);
+		//TODO PROPER TABLEVIEW HANDLER
 		connectedPlayers.getColumns().addAll(name, pawn, ready);
+		connectedPlayers.setItems(tableItems);
 		HBox bottom = new HBox(10);
 		bottom.setPadding(new Insets(10, 10, 10, 10));
 		bottom.setAlignment(Pos.CENTER);
@@ -259,7 +264,10 @@ public class MainMenuController implements Initializable {
 	public void menuClose(ActionEvent event) throws IOException {
 		Platform.exit();
 	}
-
+	//TODO HANDLER FOR TABLEVIEW
+	public void addPlayer(String name, Pawn pawn) {
+		tableItems.add(new Player(name, pawn));
+	}
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 	}
