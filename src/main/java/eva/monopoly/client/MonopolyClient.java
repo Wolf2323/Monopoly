@@ -58,6 +58,7 @@ public class MonopolyClient extends Application {
 			switch (state.getState()) {
 			case CONNECTED:
 				LOG.info("Der Spieler " + state.getName() + " hat sich zum Spiel verbunden");
+				
 				return;
 			case DISCONNECTED:
 				LOG.info("Der Spieler " + state.getName() + " hat die Verbindung getrennt");
