@@ -12,6 +12,7 @@ import eva.monopoly.api.game.player.Player;
 import eva.monopoly.api.game.player.Player.Pawn;
 import eva.monopoly.api.network.client.Client;
 import eva.monopoly.client.MonopolyClient;
+import eva.monopoly.client.utils.PlayerLobby;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -55,13 +56,24 @@ public class MainMenuController implements Initializable {
 	MenuBar menuBar;
 	private boolean isPawnErrorNotSelected = false;
 	private boolean isPawnErrorWrongSelected = false;
-	private ObservableList<Player> tableItems = FXCollections.observableArrayList();
+	private ObservableList<PlayerLobby> tableItems;
 	private String uName;
-	private Pattern p = Pattern.compile("^" + "(((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}" // Domain name
+	private Pattern p = Pattern.compile("^" + "(((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}" // Domain
+																									// name
 			+ "|" + "localhost" // localhost
 			+ "|" + "(([0-9]{1,3}\\.){3})[0-9]{1,3})" // Ip
 			+ ":" + "[0-9]{1,5}$"); // Port
 
+	private static MainMenuController instance;
+	public static MainMenuController getInstance() {
+		if (MainMenuController.instance == null) {
+			MainMenuController.instance = new MainMenuController();
+		}
+		return MainMenuController.instance;
+	}
+	public MainMenuController() {
+		
+	}
 	public void initData(String nickname) {
 		uName = nickname;
 		uNameLabel.setText("Hello, " + uName);
@@ -141,14 +153,14 @@ public class MainMenuController implements Initializable {
 		newWindow.setTitle("Pre-Game Lobby");
 		Label tabelLabel = new Label("Players");
 		tabelLabel.setFont(new Font("Arial", 20));
-		TableView<Player> connectedPlayers = new TableView<>();
+		TableView<PlayerLobby> connectedPlayers = new TableView<>();
 		TableColumn name = new TableColumn("Name");
 		TableColumn pawn = new TableColumn("Pawn");
 		TableColumn ready = new TableColumn("Ready");
 		name.setPrefWidth(200);
 		pawn.setPrefWidth(100);
 		ready.setPrefWidth(100);
-		//TODO PROPER TABLEVIEW HANDLER
+		// TODO PROPER TABLEVIEW HANDLER
 		connectedPlayers.getColumns().addAll(name, pawn, ready);
 		connectedPlayers.setItems(tableItems);
 		HBox bottom = new HBox(10);
@@ -264,11 +276,49 @@ public class MainMenuController implements Initializable {
 	public void menuClose(ActionEvent event) throws IOException {
 		Platform.exit();
 	}
-	//TODO HANDLER FOR TABLEVIEW
+
+	// TODO HANDLER FOR TABLEVIEW
 	public void addPlayer(String name, Pawn pawn) {
-		tableItems.add(new Player(name, pawn));
+		tableItems.add(new PlayerLobby(name, pawnToString(pawn)));
 	}
+
+	public void addPlayer(String name) {
+		tableItems.add(new PlayerLobby(name));
+	}
+
+	public void changePawn(String name, Pawn pawn) {
+		for (PlayerLobby p : tableItems) {
+			if (p.getName().equals(name)) {
+				p.setPawn(pawnToString(pawn));
+			}
+		}
+	}
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		tableItems = FXCollections.observableArrayList();
+	}
+
+	public String pawnToString(Pawn pawn) {
+		switch (pawn) {
+		case TOPHAT:
+			return "Tophat";
+		case IRON:
+			return "Iron";
+		case SHOE:
+			return "Shoe";
+		case BATTLESHIP:
+			return "Battleship";
+		case WHEELBARROW:
+			return "Wheelbarrow";
+		case DOG:
+			return "Dog";
+		case CAR:
+			return "Car";
+		case THIMBLE:
+			return "Thimble";
+		default:
+			return null;
+		}
 	}
 }

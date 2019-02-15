@@ -71,11 +71,41 @@ public class MonopolyClient extends Application {
 				return;
 			}
 		});
+		client.getSocketConnector().registerHandle(PawnChanged.class, (con, state) -> {
+			switch (state.getPawn()) {
+				case TOPHAT:
+					LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Tophat gewechselt");
+					return;
+				case IRON:
+					LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Iron gewechselt");
+					return;
+				case SHOE:
+					LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Shoe gewechselt");
+					return;
+				case BATTLESHIP:
+					LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Battleship gewechselt");
+					return;
+				case WHEELBARROW:
+					LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Wheelbarrow gewechselt");
+					return;
+				case DOG:
+					LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Dog gewechselt");
+					return;
+				case CAR:
+					LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Car gewechselt");
+					return;
+				case THIMBLE:
+					LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Thimble gewechselt");
+					return;
+			}
+		});
 	}
 
 	public static void notifyServerPawnChanged(String pawnSelection) {
 		if (pawnSelection.equalsIgnoreCase("Tophat")) {
 			client.getSocketConnector().sendMessage(new PawnChanged(Pawn.TOPHAT));
+		} else if (pawnSelection.equalsIgnoreCase("Thimble")) {
+			client.getSocketConnector().sendMessage(new PawnChanged(Pawn.THIMBLE));
 		} else if (pawnSelection.equalsIgnoreCase("Iron")) {
 			client.getSocketConnector().sendMessage(new PawnChanged(Pawn.IRON));
 		} else if (pawnSelection.equalsIgnoreCase("Shoe")) {
@@ -89,5 +119,8 @@ public class MonopolyClient extends Application {
 		} else if (pawnSelection.equalsIgnoreCase("Car")) {
 			client.getSocketConnector().sendMessage(new PawnChanged(Pawn.CAR));
 		}
+	}
+	public static void notifyServerReadyStatus() {
+		
 	}
 }

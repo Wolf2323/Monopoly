@@ -55,7 +55,7 @@ public class StartupController {
 		Parent mainMenuParent = loader.load();
 		Scene mainMenu = new Scene(mainMenuParent);
 		String uName = nickname.getText();
-		MainMenuController menuControl = loader.getController();
+		MainMenuController menuControl = MainMenuController.getInstance();
 		menuControl.initData(uName);
 		Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		window.setScene(mainMenu);
