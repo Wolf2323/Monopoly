@@ -182,24 +182,23 @@ public class MainMenuController implements Initializable {
 				String pawnSelection = pawns.getSelectionModel().getSelectedItem();
 				// TODO entferne if Abfragen
 
-				if (pawnSelection.equalsIgnoreCase("TOPHAT")) {
-					changePawn(uName, Pawn.TOPHAT);
-				} else if (pawnSelection.equalsIgnoreCase("THIMBLE")) {
-					changePawn(uName, Pawn.THIMBLE);
-				} else if (pawnSelection.equalsIgnoreCase("IRON")) {
-					changePawn(uName, Pawn.IRON);
-				} else if (pawnSelection.equalsIgnoreCase("SHOE")) {
-					changePawn(uName, Pawn.SHOE);
-				} else if (pawnSelection.equalsIgnoreCase("BATTLESHIP")) {
-					changePawn(uName, Pawn.BATTLESHIP);
-				} else if (pawnSelection.equalsIgnoreCase("WHEELBARROW")) {
-					changePawn(uName, Pawn.WHEELBARROW);
-				} else if (pawnSelection.equalsIgnoreCase("DOG")) {
-					changePawn(uName, Pawn.DOG);
-				} else if (pawnSelection.equalsIgnoreCase("CAR")) {
-					changePawn(uName, Pawn.CAR);
-				}
-
+				/*
+				 * if (pawnSelection.equalsIgnoreCase("TOPHAT")) {
+				 * changePawn(uName, Pawn.TOPHAT); } else if
+				 * (pawnSelection.equalsIgnoreCase("THIMBLE")) {
+				 * changePawn(uName, Pawn.THIMBLE); } else if
+				 * (pawnSelection.equalsIgnoreCase("IRON")) { changePawn(uName,
+				 * Pawn.IRON); } else if
+				 * (pawnSelection.equalsIgnoreCase("SHOE")) { changePawn(uName,
+				 * Pawn.SHOE); } else if
+				 * (pawnSelection.equalsIgnoreCase("BATTLESHIP")) {
+				 * changePawn(uName, Pawn.BATTLESHIP); } else if
+				 * (pawnSelection.equalsIgnoreCase("WHEELBARROW")) {
+				 * changePawn(uName, Pawn.WHEELBARROW); } else if
+				 * (pawnSelection.equalsIgnoreCase("DOG")) { changePawn(uName,
+				 * Pawn.DOG); } else if (pawnSelection.equalsIgnoreCase("CAR"))
+				 * { changePawn(uName, Pawn.CAR); }
+				 */
 				MonopolyClient.notifyServerPawnChanged(pawnSelection);
 			}
 		}));
@@ -219,8 +218,8 @@ public class MainMenuController implements Initializable {
 				}
 			} else {
 				// TODO entferne changeReady()
-				changeReady(uName);
-				readyNotPossible();
+				// changeReady(uName);
+				// readyNotPossible();
 				MonopolyClient.notifyServerReadyStatus();
 			}
 		});
@@ -324,7 +323,7 @@ public class MainMenuController implements Initializable {
 		if (!isPawnErrorWrongSelected) {
 			Label errorMessage = new Label("Diese Spielfigur ist nicht verfügbar!");
 			errorMessage.setTextFill(Color.RED);
-			VBox pawnBox = ((VBox)((HBox)layout.getChildren().get(2)).getChildren().get(1));
+			VBox pawnBox = ((VBox) ((HBox) layout.getChildren().get(2)).getChildren().get(1));
 			ComboBox<String> pawns = (ComboBox<String>) pawnBox.getChildren().get(1);
 			pawns.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
 			errorMessage.setTextFill(Color.RED);
