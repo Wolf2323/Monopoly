@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import eva.monopoly.api.game.player.Player;
 import eva.monopoly.api.game.player.Player.Pawn;
+import eva.monopoly.api.network.api.SocketConnector;
 import eva.monopoly.client.MonopolyClient;
 import eva.monopoly.client.utils.PlayerLobby;
 import javafx.application.Platform;
@@ -92,6 +93,7 @@ public class MainMenuController implements Initializable {
 		TextField portField = new TextField();
 		portField.setPromptText("Enter Port");
 		portField.setMaxWidth(100);
+		portField.setText(String.valueOf(SocketConnector.STD_PORT));
 		portField.setOnKeyPressed(e -> { // Enter Button confirms input
 			if (e.getCode() == KeyCode.ENTER) {
 				try {
@@ -295,6 +297,15 @@ public class MainMenuController implements Initializable {
 		tableItems.add(new PlayerLobby(name, pawnToString(pawn)));
 		connectedPlayers.refresh();
 
+	}
+
+	public void addPlayer(String name, Pawn pawn, boolean ready) {
+		if (ready) {
+			tableItems.add(new PlayerLobby(name, pawnToString(pawn), "Ready"));
+		} else {
+			tableItems.add(new PlayerLobby(name, pawnToString(pawn), "Not Ready"));
+		}
+		connectedPlayers.refresh();
 	}
 
 	public void addPlayer(String name) {

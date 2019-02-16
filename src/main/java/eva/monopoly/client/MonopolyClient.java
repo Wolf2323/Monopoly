@@ -2,6 +2,7 @@ package eva.monopoly.client;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,7 +145,11 @@ public class MonopolyClient extends Application {
 			return;
 		});
 		client.getSocketConnector().registerHandle(GetConnectedClients.class, (con, state) -> {
-			
+			for (Entry<String, eva.monopoly.api.network.messages.GetConnectedClients.Client> entry : state.getClients().entrySet()) {
+				if (!entry.getKey().equals(name)) {
+					MainMenuController.getInstance().addPlayer(entry.getKey(), entry.getValue().getPlayerPawn(), entry.getValue().isReady());
+				}
+			}
 		});
 	}
 
