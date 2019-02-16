@@ -19,7 +19,6 @@ import eva.monopoly.api.network.messages.RollDice;
 import eva.monopoly.client.view.GameBoardController;
 import eva.monopoly.client.view.MainMenuController;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -50,12 +49,16 @@ public class MonopolyClient extends Application {
 	public static void initializeClient(String ip, int port, String nick) throws UnknownHostException, IOException {
 		client = new Client(ip, port, nick, (con, e) -> {
 			try {
-				con.closeConnection();
-				client = null;
-				// TODO hat verbindung unterbrochen, erneuter verbingungsaufbau?
-				// initializeClient(ip, port, nick);
+				con.getSocket().close();
 			} catch (IOException e1) {
 			}
+			try {
+				con.closeConnection();
+			} catch (IOException e1) {
+			}
+			client = null;
+			// TODO hat verbindung unterbrochen, erneuter verbingungsaufbau?
+			// initializeClient(ip, port, nick);
 		});
 		registerHandler();
 
@@ -144,9 +147,11 @@ public class MonopolyClient extends Application {
 			}
 		});
 		client.getSocketConnector().registerHandle(GetConnectedClients.class, (con, state) -> {
-			for (Entry<String, eva.monopoly.api.network.messages.GetConnectedClients.Client> entry : state.getClients().entrySet()) {
+			for (Entry<String, eva.monopoly.api.network.messages.GetConnectedClients.Client> entry : state.getClients()
+					.entrySet()) {
 				if (!entry.getKey().equals(name)) {
-					MainMenuController.getInstance().addPlayer(entry.getKey(), entry.getValue().getPlayerPawn(), entry.getValue().isReady());
+					MainMenuController.getInstance().addPlayer(entry.getKey(), entry.getValue().getPlayerPawn(),
+							entry.getValue().isReady());
 				}
 			}
 		});
@@ -186,8 +191,9 @@ public class MonopolyClient extends Application {
 
 	public static void getConnectedClients() {
 		client.getSocketConnector().sendMessage(new GetConnectedClients(name));
-		
+
 	}
+
 	public static void disconnect() {
 		try {
 			client.getSocketConnector().sendMessage(new PlayerStatusChanged(name, ConnectionState.DISCONNECTED));
@@ -197,5 +203,5 @@ public class MonopolyClient extends Application {
 			e.printStackTrace();
 		}
 	}
-	
+
 }
