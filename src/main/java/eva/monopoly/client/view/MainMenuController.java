@@ -263,6 +263,15 @@ public class MainMenuController implements Initializable {
 				}
 			}
 		});
+		ipField.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				try {
+					goToGameLobby(ipField.getText(), portField.getText(), event);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
 		ipAndPort.getChildren().addAll(ipField, separator, portField);
 		Button okBttn = new Button("Continue");
 		Button cancelBttn = new Button("Cancel");
