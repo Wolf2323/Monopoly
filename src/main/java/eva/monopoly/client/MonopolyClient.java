@@ -14,6 +14,7 @@ import eva.monopoly.api.network.messages.PawnChanged;
 import eva.monopoly.api.network.messages.PlayerStatusChanged;
 import eva.monopoly.api.network.messages.PlayerStatusChanged.ConnectionState;
 import eva.monopoly.api.network.messages.RollDice;
+import eva.monopoly.client.view.GameBoardController;
 import eva.monopoly.client.view.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -120,14 +121,23 @@ public class MonopolyClient extends Application {
 			case PREGAME:
 				LOG.info("Der Spieler " + state.getName() + " ist nicht bereit");
 				MainMenuController.getInstance().readyNotPossible();
+				return;
 			case READY:
 				LOG.info("Der Spieler " + state.getName() + " ist bereit");
 				MainMenuController.getInstance().changeReady(state.getName());
 				return;
 			case INGAME:
-				;
+				LOG.info("Das Spiel startet");
+				MainMenuController.getInstance().gameStart();
+				return;
 			case FINISHED:
-				;
+				LOG.info("Das Spiel ist beendet");
+				try {
+					GameBoardController.getInstance().goToMainMenu();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				return;
 			}
 			LOG.info("Der Spieler " + state.getName() + " hat eine Bereitschaftsanfrage geschickt");
 			return;

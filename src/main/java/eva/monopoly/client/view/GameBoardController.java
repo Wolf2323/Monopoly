@@ -119,6 +119,9 @@ public class GameBoardController implements Initializable {
 	}
 
 	public void menuMainMenu(ActionEvent event) throws IOException {
+		goToMainMenu();
+	}
+	public void goToMainMenu() throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("mainMenu.fxml"));
 		Parent mainMenuParent = loader.load();
