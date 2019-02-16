@@ -2,6 +2,7 @@ package eva.monopoly.client.view;
 
 import java.io.IOException;
 
+import eva.monopoly.client.MonopolyClient;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -55,6 +56,7 @@ public class StartupController {
 		Parent mainMenuParent = loader.load();
 		Scene mainMenu = new Scene(mainMenuParent);
 		String uName = nickname.getText();
+		MonopolyClient.setName(uName);
 		MainMenuController menuControl = MainMenuController.getInstance();
 		menuControl.initData(uName);
 		Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();

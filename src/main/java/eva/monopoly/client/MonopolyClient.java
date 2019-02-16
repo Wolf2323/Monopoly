@@ -8,10 +8,12 @@ import org.slf4j.LoggerFactory;
 
 import eva.monopoly.api.game.player.Player.Pawn;
 import eva.monopoly.api.network.client.Client;
+import eva.monopoly.api.network.messages.GameStateChanged;
+import eva.monopoly.api.network.messages.GameStateChanged.GameState;
 import eva.monopoly.api.network.messages.PawnChanged;
 import eva.monopoly.api.network.messages.PlayerStatusChanged;
 import eva.monopoly.api.network.messages.PlayerStatusChanged.ConnectionState;
-import eva.monopoly.api.network.messages.ReadyStatusChanged;
+import eva.monopoly.api.network.messages.RollDice;
 import eva.monopoly.client.view.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +24,7 @@ import javafx.stage.Stage;
 public class MonopolyClient extends Application {
 	public final static Logger LOG = LoggerFactory.getLogger(MonopolyClient.class);
 	private static Client client;
+	private static String name;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -52,7 +55,7 @@ public class MonopolyClient extends Application {
 		});
 		registerHandler();
 
-		client.getSocketConnector().sendMessage(new PlayerStatusChanged(ConnectionState.CONNECTED));
+		client.getSocketConnector().sendMessage(new PlayerStatusChanged(name, ConnectionState.CONNECTED));
 	}
 
 	private static void registerHandler() {
@@ -112,7 +115,20 @@ public class MonopolyClient extends Application {
 				return;
 			}
 		});
-		client.getSocketConnector().registerHandle(ReadyStatusChanged.class, (con, state) -> {
+		client.getSocketConnector().registerHandle(GameStateChanged.class, (con, state) -> {
+			switch (state.getGameState()) {
+			case PREGAME:
+				LOG.info("Der Spieler " + state.getName() + " ist nicht bereit");
+				MainMenuController.getInstance().readyNotPossible();
+			case READY:
+				LOG.info("Der Spieler " + state.getName() + " ist bereit");
+				MainMenuController.getInstance().changeReady(state.getName());
+				return;
+			case INGAME:
+				;
+			case FINISHED:
+				;
+			}
 			LOG.info("Der Spieler " + state.getName() + " hat eine Bereitschaftsanfrage geschickt");
 			return;
 		});
@@ -120,25 +136,33 @@ public class MonopolyClient extends Application {
 
 	public static void notifyServerPawnChanged(String pawnSelection) {
 		if (pawnSelection.equalsIgnoreCase("Tophat")) {
-			client.getSocketConnector().sendMessage(new PawnChanged(Pawn.TOPHAT));
+			client.getSocketConnector().sendMessage(new PawnChanged(name, Pawn.TOPHAT));
 		} else if (pawnSelection.equalsIgnoreCase("Thimble")) {
-			client.getSocketConnector().sendMessage(new PawnChanged(Pawn.THIMBLE));
+			client.getSocketConnector().sendMessage(new PawnChanged(name, Pawn.THIMBLE));
 		} else if (pawnSelection.equalsIgnoreCase("Iron")) {
-			client.getSocketConnector().sendMessage(new PawnChanged(Pawn.IRON));
+			client.getSocketConnector().sendMessage(new PawnChanged(name, Pawn.IRON));
 		} else if (pawnSelection.equalsIgnoreCase("Shoe")) {
-			client.getSocketConnector().sendMessage(new PawnChanged(Pawn.SHOE));
+			client.getSocketConnector().sendMessage(new PawnChanged(name, Pawn.SHOE));
 		} else if (pawnSelection.equalsIgnoreCase("Battleship")) {
-			client.getSocketConnector().sendMessage(new PawnChanged(Pawn.BATTLESHIP));
+			client.getSocketConnector().sendMessage(new PawnChanged(name, Pawn.BATTLESHIP));
 		} else if (pawnSelection.equalsIgnoreCase("Wheelbarrow")) {
-			client.getSocketConnector().sendMessage(new PawnChanged(Pawn.WHEELBARROW));
+			client.getSocketConnector().sendMessage(new PawnChanged(name, Pawn.WHEELBARROW));
 		} else if (pawnSelection.equalsIgnoreCase("Dog")) {
-			client.getSocketConnector().sendMessage(new PawnChanged(Pawn.DOG));
+			client.getSocketConnector().sendMessage(new PawnChanged(name, Pawn.DOG));
 		} else if (pawnSelection.equalsIgnoreCase("Car")) {
-			client.getSocketConnector().sendMessage(new PawnChanged(Pawn.CAR));
+			client.getSocketConnector().sendMessage(new PawnChanged(name, Pawn.CAR));
 		}
 	}
 
 	public static void notifyServerReadyStatus() {
-		client.getSocketConnector().sendMessage(new ReadyStatusChanged());
+		client.getSocketConnector().sendMessage(new GameStateChanged(name, GameState.READY));
+	}
+
+	public static void setName(String name) {
+		MonopolyClient.name = name;
+	}
+
+	public static void rollDice() {
+		client.getSocketConnector().sendMessage(new RollDice(name));
 	}
 }

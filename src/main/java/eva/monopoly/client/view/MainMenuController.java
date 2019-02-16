@@ -181,23 +181,23 @@ public class MainMenuController implements Initializable {
 			if (pawns.getSelectionModel().getSelectedItem() != null) {
 				String pawnSelection = pawns.getSelectionModel().getSelectedItem();
 				// TODO entferne if Abfragen
-				if (pawnSelection.equalsIgnoreCase("TOPHAT")) {
-					changePawn(uName, Pawn.TOPHAT);
-				} else if (pawnSelection.equalsIgnoreCase("THIMBLE")) {
-					changePawn(uName, Pawn.THIMBLE);
-				} else if (pawnSelection.equalsIgnoreCase("IRON")) {
-					changePawn(uName, Pawn.IRON);
-				} else if (pawnSelection.equalsIgnoreCase("SHOE")) {
-					changePawn(uName, Pawn.SHOE);
-				} else if (pawnSelection.equalsIgnoreCase("BATTLESHIP")) {
-					changePawn(uName, Pawn.BATTLESHIP);
-				} else if (pawnSelection.equalsIgnoreCase("WHEELBARROW")) {
-					changePawn(uName, Pawn.WHEELBARROW);
-				} else if (pawnSelection.equalsIgnoreCase("DOG")) {
-					changePawn(uName, Pawn.DOG);
-				} else if (pawnSelection.equalsIgnoreCase("CAR")) {
-					changePawn(uName, Pawn.CAR);
-				}
+				/*
+				 * if (pawnSelection.equalsIgnoreCase("TOPHAT")) {
+				 * changePawn(uName, Pawn.TOPHAT); } else if
+				 * (pawnSelection.equalsIgnoreCase("THIMBLE")) {
+				 * changePawn(uName, Pawn.THIMBLE); } else if
+				 * (pawnSelection.equalsIgnoreCase("IRON")) { changePawn(uName,
+				 * Pawn.IRON); } else if
+				 * (pawnSelection.equalsIgnoreCase("SHOE")) { changePawn(uName,
+				 * Pawn.SHOE); } else if
+				 * (pawnSelection.equalsIgnoreCase("BATTLESHIP")) {
+				 * changePawn(uName, Pawn.BATTLESHIP); } else if
+				 * (pawnSelection.equalsIgnoreCase("WHEELBARROW")) {
+				 * changePawn(uName, Pawn.WHEELBARROW); } else if
+				 * (pawnSelection.equalsIgnoreCase("DOG")) { changePawn(uName,
+				 * Pawn.DOG); } else if (pawnSelection.equalsIgnoreCase("CAR"))
+				 * { changePawn(uName, Pawn.CAR); }
+				 */
 				MonopolyClient.notifyServerPawnChanged(pawnSelection);
 			}
 		}));
@@ -217,7 +217,8 @@ public class MainMenuController implements Initializable {
 				}
 			} else {
 				// TODO entferne changeReady()
-				changeReady(uName);
+				// changeReady(uName);
+				// readyNotPossible();
 				MonopolyClient.notifyServerReadyStatus();
 			}
 		});
@@ -315,6 +316,15 @@ public class MainMenuController implements Initializable {
 		}
 		connectedPlayers.refresh();
 
+	}
+
+	public void readyNotPossible() {
+		if (!isPawnErrorWrongSelected) {
+			Label errorMessage = new Label("Bitte eine andere Spielfigur wählen!");
+			errorMessage.setTextFill(Color.RED);
+			newWindow.getScene().getRoot().getParent().getChildrenUnmodifiable().add(errorMessage);
+			isPawnErrorWrongSelected = true;
+		}
 	}
 
 	public void changeReady(String name) {
