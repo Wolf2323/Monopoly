@@ -379,24 +379,28 @@ public class MainMenuController implements Initializable {
 	}
 
 	public String pawnToString(Pawn pawn) {
-		switch (pawn) {
-		case TOPHAT:
-			return "Tophat";
-		case IRON:
-			return "Iron";
-		case SHOE:
-			return "Shoe";
-		case BATTLESHIP:
-			return "Battleship";
-		case WHEELBARROW:
-			return "Wheelbarrow";
-		case DOG:
-			return "Dog";
-		case CAR:
-			return "Car";
-		case THIMBLE:
-			return "Thimble";
-		default:
+		if (pawn != null) {
+			switch (pawn) {
+			case TOPHAT:
+				return "Tophat";
+			case IRON:
+				return "Iron";
+			case SHOE:
+				return "Shoe";
+			case BATTLESHIP:
+				return "Battleship";
+			case WHEELBARROW:
+				return "Wheelbarrow";
+			case DOG:
+				return "Dog";
+			case CAR:
+				return "Car";
+			case THIMBLE:
+				return "Thimble";
+			default:
+				return "No Selection";
+			}
+		} else {
 			return "No Selection";
 		}
 	}
