@@ -143,9 +143,9 @@ public class MonopolyClient extends Application {
 			LOG.info("Der Spieler " + state.getName() + " hat eine Bereitschaftsanfrage geschickt");
 			return;
 		});
-		//client.getSocketConnector().registerHandle(null, (con, state) -> {
+		client.getSocketConnector().registerHandle(GetConnectedClients.class, (con, state) -> {
 			
-		//});
+		});
 	}
 
 	public static void notifyServerPawnChanged(String pawnSelection) {
@@ -183,6 +183,15 @@ public class MonopolyClient extends Application {
 	public static void getConnectedClients() {
 		client.getSocketConnector().sendMessage(new GetConnectedClients(name));
 		
+	}
+	public static void disconnect() {
+		try {
+			client.getSocketConnector().sendMessage(new PlayerStatusChanged(name, ConnectionState.DISCONNECTED));
+			client.getSocketConnector().closeConnection();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

@@ -224,7 +224,10 @@ public class MainMenuController implements Initializable {
 				MonopolyClient.notifyServerReadyStatus();
 			}
 		});
-		cancelBttn.setOnAction(e -> newWindow.close()); // close window
+		cancelBttn.setOnAction(e -> {
+			newWindow.close();
+			MonopolyClient.disconnect();
+		}); // close window
 		layout = new VBox(10);
 		layout.setPadding(new Insets(10, 10, 10, 10));
 		layout.getChildren().addAll(tabelLabel, connectedPlayers, bottom);
