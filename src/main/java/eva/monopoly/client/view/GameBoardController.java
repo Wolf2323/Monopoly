@@ -41,7 +41,7 @@ public class GameBoardController implements Initializable {
 	private String uName;
 	private Stage roundWindow;
 	private VBox layout;
-	
+
 	private static GameBoardController instance;
 
 	public static GameBoardController getInstance() {
@@ -71,7 +71,7 @@ public class GameBoardController implements Initializable {
 	}
 
 	public void startRound() {
-		
+
 		/*
 		 * show Dice roll, show data of target field, give button options to buy
 		 * or ignore if field is not occupied, give option to place house if
@@ -93,7 +93,7 @@ public class GameBoardController implements Initializable {
 		dice1.getChildren().addAll(header1, diceNumber1);
 		dice2.getChildren().addAll(header2, diceNumber2);
 		dices.getChildren().addAll(dice1, dice2);
-		Button rollDice = new Button("Roll Dice");
+		Button rollDice = new Button("Würfeln");
 		rollDice.setOnAction(e -> { // send message to Server to roll Dice
 			MonopolyClient.rollDice();
 		});
@@ -104,6 +104,19 @@ public class GameBoardController implements Initializable {
 		Scene scene = new Scene(layout);
 		roundWindow.setScene(scene);
 		roundWindow.showAndWait();
+	}
+
+	public void setDices(int dice1, int dice2) {
+		VBox root = (VBox)roundWindow.getScene().getRoot();
+		Label diceNumber1 = (Label) ((VBox)((HBox)root.getChildren().get(0)).getChildren().get(0)).getChildren().get(1);
+		Label diceNumber2 = (Label) ((VBox)((HBox)root.getChildren().get(0)).getChildren().get(1)).getChildren().get(1);
+		Button continueBttn = (Button) (root.getChildren().get(1));
+		diceNumber1.setText("" + dice1);
+		diceNumber2.setText("" + dice2);
+		continueBttn.setText("Laufen");
+		continueBttn.setOnAction(e -> { //TODO show next Screen with street info
+			
+		});
 	}
 
 	public void menuClose(ActionEvent event) throws IOException {
@@ -121,6 +134,7 @@ public class GameBoardController implements Initializable {
 	public void menuMainMenu(ActionEvent event) throws IOException {
 		goToMainMenu();
 	}
+
 	public void goToMainMenu() throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("mainMenu.fxml"));
