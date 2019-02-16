@@ -139,6 +139,7 @@ public class MainMenuController implements Initializable {
 		}
 		try {
 			MonopolyClient.initializeClient(ip, Integer.parseInt(port), uName);
+			MonopolyClient.getConnectedClients();
 		} catch (IOException | NumberFormatException e) {
 			e.printStackTrace();
 			if (!ip.equalsIgnoreCase("Hack")) {

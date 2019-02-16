@@ -62,7 +62,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="9" GridPane.rowIndex="10">
+            <VBox id="gamefield" fx:id="id1" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="9" GridPane.rowIndex="10">
                <children>
                   <Rectangle id="gamefield" arcHeight="5.0" arcWidth="5.0" fill="#6b004d" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="BADSTRASSE" textAlignment="CENTER" wrappingWidth="113.0">
@@ -76,7 +76,7 @@
                   </Text>
                </children>
             </VBox>
-            <VBox id="gamefield" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="10">
+            <VBox id="gamefield" fx:id="id0" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="10">
                <children>
                   <Text id="gamefield" fill="#d00000" strokeType="OUTSIDE" strokeWidth="0.0" text="LOS">
                      <font>
@@ -88,12 +88,12 @@
                   </Text>
                   <ImageView fitHeight="16.0" fitWidth="79.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../../../../../OneDrive/Bilder/losicon.png" />
+                        <Image url="@../../../../../resources/GameBoardIcons/losicon.png" />
                      </image>
                   </ImageView>
                </children>
             </VBox>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="7" GridPane.rowIndex="10">
+            <VBox id="gamefield" fx:id="id3" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="7" GridPane.rowIndex="10">
                <children>
                   <Rectangle id="gamefield" arcHeight="5.0" arcWidth="5.0" fill="#6b004d" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="TURMSTRASSE" textAlignment="CENTER" wrappingWidth="113.0">
@@ -108,7 +108,7 @@
                   </Text>
                </children>
             </VBox>
-            <VBox id="gamefield" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="8" GridPane.rowIndex="10">
+            <VBox id="gamefield" fx:id="id2" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="8" GridPane.rowIndex="10">
                <children>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="GEMEINSCHAFTSFELD" textAlignment="CENTER" wrappingWidth="113.0">
                      <font>
@@ -117,11 +117,11 @@
                   </Text>
                   <ImageView fitHeight="26.0" fitWidth="48.0" pickOnBounds="true">
                      <image>
-                        <Image url="@../../../../../../../../../OneDrive/Bilder/Gemeinschafticon.png" />
+                        <Image url="@../../../../../resources/GameBoardIcons/Gemeinschafticon.png" />
                      </image>
                   </ImageView>
                </children></VBox>
-            <VBox id="gamefield" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="6" GridPane.rowIndex="10">
+            <VBox id="gamefield" fx:id="id4" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="6" GridPane.rowIndex="10">
                <children>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="EINKOMMENSTEUER" textAlignment="CENTER" wrappingWidth="87.0">
                      <font>
@@ -134,7 +134,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="5" GridPane.rowIndex="10">
+            <VBox id="gamefield" fx:id="id5" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="5" GridPane.rowIndex="10">
                <children>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="SÜDBAHNHOF" textAlignment="CENTER" wrappingWidth="113.0">
                      <font>
@@ -143,7 +143,7 @@
                   </Text>
                   <ImageView fitHeight="28.0" fitWidth="45.0" pickOnBounds="true">
                      <image>
-                        <Image url="@../../../../../../../../../OneDrive/Bilder/Bahnhoficon.png" />
+                        <Image url="@../../../../../resources/GameBoardIcons/Bahnhoficon.png" />
                      </image>
                   </ImageView>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="M 200">
@@ -152,7 +152,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="10">
+            <VBox id="gamefield" fx:id="id6" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="10">
                <children>
                   <Rectangle id="gamefield" arcHeight="5.0" arcWidth="5.0" fill="#70a9ff" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="CHAUSSEESTRASSE" textAlignment="CENTER" wrappingWidth="76.0">
@@ -166,7 +166,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="10">
+            <VBox id="gamefield" fx:id="id7" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="10">
                <children>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="EREIGNISFELD" textAlignment="CENTER" wrappingWidth="113.0">
                      <font>
@@ -179,7 +179,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="10">
+            <VBox id="gamefield" fx:id="id8" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="10">
                <children>
                   <Rectangle id="gamefield" arcHeight="5.0" arcWidth="5.0" fill="#70a9ff" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="ELISENSTRASSE" textAlignment="CENTER" wrappingWidth="113.0">
@@ -193,7 +193,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="10">
+            <VBox id="gamefield" fx:id="id9" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="10">
                <children>
                   <Rectangle id="gamefield" arcHeight="5.0" arcWidth="5.0" fill="#70a9ff" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="POSTSTRASSE" textAlignment="CENTER" wrappingWidth="113.0">
@@ -207,7 +207,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="CENTER" prefHeight="121.0" prefWidth="194.0" GridPane.rowIndex="10">
+            <VBox id="gamefield" fx:id="id10" alignment="CENTER" prefHeight="121.0" prefWidth="194.0" GridPane.rowIndex="10">
                <children>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="GEFÄNGNIS" textAlignment="CENTER" wrappingWidth="113.0">
                      <font>
@@ -216,11 +216,11 @@
                   </Text>
                   <ImageView fitHeight="33.0" fitWidth="119.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../../../../../OneDrive/Bilder/Gefängnis.png" />
+                        <Image url="@../../../../../resources/GameBoardIcons/Gefängnis.png" />
                      </image>
                   </ImageView>
                </children></VBox>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="9">
+            <VBox id="gamefield" fx:id="id11" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="9">
                <children>
                   <Rectangle id="gamefield" arcHeight="5.0" arcWidth="5.0" fill="#ff2370" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="SEESTRASSE" textAlignment="CENTER" wrappingWidth="113.0">
@@ -234,7 +234,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="8">
+            <VBox id="gamefield" fx:id="id12" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="8">
                <children>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="ELEKTRIZITÄTSWERK" textAlignment="CENTER" wrappingWidth="104.0">
                      <font>
@@ -247,7 +247,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="7">
+            <VBox id="gamefield" fx:id="id13" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="7">
                <children>
                   <Rectangle id="gamefield" arcHeight="5.0" arcWidth="5.0" fill="#ff2370" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="HAFENSTRASSE" textAlignment="CENTER" wrappingWidth="113.0">
@@ -261,7 +261,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="6">
+            <VBox id="gamefield" fx:id="id14" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="6">
                <children>
                   <Rectangle id="gamefield" arcHeight="5.0" arcWidth="5.0" fill="#ff2370" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="NEUE STRASSE" textAlignment="CENTER" wrappingWidth="113.0">
@@ -275,7 +275,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="5">
+            <VBox id="gamefield" fx:id="id15" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="5">
                <children>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="WESTBAHNHOF" textAlignment="CENTER" wrappingWidth="104.0">
                      <font>
@@ -284,7 +284,7 @@
                   </Text>
                   <ImageView fitHeight="28.0" fitWidth="45.0" pickOnBounds="true">
                      <image>
-                        <Image url="@../../../../../../../../../OneDrive/Bilder/Bahnhoficon.png" />
+                        <Image url="@../../../../../resources/GameBoardIcons/Bahnhoficon.png" />
                      </image>
                   </ImageView>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="M 200">
@@ -293,7 +293,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="4">
+            <VBox id="gamefield" fx:id="id16" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="4">
                <children>
                   <Rectangle id="gamefield" arcHeight="5.0" arcWidth="5.0" fill="#ff8600" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="MÜNCHNER STRASSE" textAlignment="CENTER" wrappingWidth="113.0">
@@ -307,7 +307,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="3">
+            <VBox id="gamefield" fx:id="id17" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="3">
                <children>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="GEMEINSCHAFTSFELD" textAlignment="CENTER" wrappingWidth="113.0">
                      <font>
@@ -316,11 +316,11 @@
                   </Text>
                   <ImageView fitHeight="26.0" fitWidth="48.0" pickOnBounds="true">
                      <image>
-                        <Image url="@../../../../../../../../../OneDrive/Bilder/Gemeinschafticon.png" />
+                        <Image url="@../../../../../resources/GameBoardIcons/Gemeinschafticon.png" />
                      </image>
                   </ImageView>
                </children></VBox>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
+            <VBox id="gamefield" fx:id="id18" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
                <children>
                   <Rectangle id="gamefield" arcHeight="5.0" arcWidth="5.0" fill="#ff8600" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="WIENER STRASSE" textAlignment="CENTER" wrappingWidth="113.0">
@@ -334,7 +334,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
+            <VBox id="gamefield" fx:id="id19" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
                <children>
                   <Rectangle id="gamefield" arcHeight="5.0" arcWidth="5.0" fill="#ff8600" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="BERLINER STRASSE" textAlignment="CENTER" wrappingWidth="113.0">
@@ -348,7 +348,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+            <VBox id="gamefield" fx:id="id20" alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                <children>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="FREI PARKEN" textAlignment="CENTER" wrappingWidth="104.0">
                      <font>
@@ -357,11 +357,11 @@
                   </Text>
                   <ImageView fitHeight="38.0" fitWidth="42.0" pickOnBounds="true">
                      <image>
-                        <Image url="@../../../../../../../../../OneDrive/Bilder/freiparkenicon.png" />
+                        <Image url="@../../../../../resources/GameBoardIcons/freiparkenicon.png" />
                      </image>
                   </ImageView>
                </children></VBox>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
+            <VBox id="gamefield" fx:id="id21" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
                <children>
                   <Rectangle id="gamefield" arcHeight="5.0" arcWidth="5.0" fill="RED" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="THEATERSTRASSE" textAlignment="CENTER" wrappingWidth="66.0">
@@ -375,7 +375,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
+            <VBox id="gamefield" fx:id="id22" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
                <children>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="EREIGNISFELD" textAlignment="CENTER" wrappingWidth="113.0">
                      <font>
@@ -388,7 +388,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3">
+            <VBox id="gamefield" fx:id="id23" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3">
                <children>
                   <Rectangle id="gamefield" arcHeight="5.0" arcWidth="5.0" fill="RED" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="MUSEUMSTRASSE" textAlignment="CENTER" wrappingWidth="66.0">
@@ -402,7 +402,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="4">
+            <VBox id="gamefield" fx:id="id24" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="4">
                <children>
                   <Rectangle id="gamefield" arcHeight="5.0" arcWidth="5.0" fill="RED" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="OPERNPLATZ" textAlignment="CENTER" wrappingWidth="113.0">
@@ -416,7 +416,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="5">
+            <VBox id="gamefield" fx:id="id25" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="5">
                <children>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="NORDBAHNHOF" textAlignment="CENTER" wrappingWidth="104.0">
                      <font>
@@ -425,7 +425,7 @@
                   </Text>
                   <ImageView fitHeight="28.0" fitWidth="45.0" pickOnBounds="true">
                      <image>
-                        <Image url="@../../../../../../../../../OneDrive/Bilder/Bahnhoficon.png" />
+                        <Image url="@../../../../../resources/GameBoardIcons/Bahnhoficon.png" />
                      </image>
                   </ImageView>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="M 200">
@@ -434,7 +434,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="6">
+            <VBox id="gamefield" fx:id="id26" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="6">
                <children>
                   <Rectangle id="gamefield" arcHeight="5.0" arcWidth="5.0" fill="#ffe400" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="LESSINGSTRASSE" textAlignment="CENTER" wrappingWidth="62.0">
@@ -448,7 +448,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="7">
+            <VBox id="gamefield" fx:id="id27" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="7">
                <children>
                   <Rectangle id="gamefield" arcHeight="5.0" arcWidth="5.0" fill="#ffe400" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="SCHILLERSTRASSE" textAlignment="CENTER" wrappingWidth="69.0">
@@ -462,7 +462,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="8">
+            <VBox id="gamefield" fx:id="id28" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="8">
                <children>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="WASSERWERK" textAlignment="CENTER" wrappingWidth="104.0">
                      <font>
@@ -475,7 +475,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="9">
+            <VBox id="gamefield" fx:id="id29" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="9">
                <children>
                   <Rectangle id="gamefield" arcHeight="5.0" arcWidth="5.0" fill="#ffe400" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="GOETHESTRASSE" textAlignment="CENTER" wrappingWidth="62.0">
@@ -489,7 +489,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10">
+            <VBox id="gamefield" fx:id="id30" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10">
                <children>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="AB INS GEFÄNGNIS" textAlignment="CENTER" wrappingWidth="104.0">
                      <font>
@@ -498,11 +498,11 @@
                   </Text>
                   <ImageView fitHeight="59.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" rotate="-90.0">
                      <image>
-                        <Image url="@../../../../../../../../../OneDrive/Bilder/insgefängnis%20icon.png" />
+                        <Image url="@../../../../../resources/GameBoardIcons/insgefängnis%20icon.png" />
                      </image>
                   </ImageView>
                </children></VBox>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="1">
+            <VBox id="gamefield" fx:id="id31" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="1">
                <children>
                   <Rectangle id="gamefield" arcHeight="5.0" arcWidth="5.0" fill="#04bf19" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="RATHAUSPLATZ" textAlignment="CENTER" wrappingWidth="113.0">
@@ -516,7 +516,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="2">
+            <VBox id="gamefield" fx:id="id32" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="2">
                <children>
                   <Rectangle id="gamefield" arcHeight="5.0" arcWidth="5.0" fill="#04bf19" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="HAUPTSTRASSE" textAlignment="CENTER" wrappingWidth="113.0">
@@ -530,7 +530,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="3">
+            <VBox id="gamefield" fx:id="id33" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="3">
                <children>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="GEMEINSCHAFTSFELD" textAlignment="CENTER" wrappingWidth="113.0">
                      <font>
@@ -539,11 +539,11 @@
                   </Text>
                   <ImageView fitHeight="26.0" fitWidth="48.0" pickOnBounds="true">
                      <image>
-                        <Image url="@../../../../../../../../../OneDrive/Bilder/Gemeinschafticon.png" />
+                        <Image url="@../../../../../resources/GameBoardIcons/Gemeinschafticon.png" />
                      </image>
                   </ImageView>
                </children></VBox>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="4">
+            <VBox id="gamefield" fx:id="id34" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="4">
                <children>
                   <Rectangle id="gamefield" arcHeight="5.0" arcWidth="5.0" fill="#04bf19" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="BAHNHOFSTRASSE" textAlignment="CENTER" wrappingWidth="71.0">
@@ -557,7 +557,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="5">
+            <VBox id="gamefield" fx:id="id35" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="5">
                <children>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="HAUPTBAHNHOF" textAlignment="CENTER" wrappingWidth="111.0">
                      <font>
@@ -566,7 +566,7 @@
                   </Text>
                   <ImageView fitHeight="28.0" fitWidth="45.0" pickOnBounds="true">
                      <image>
-                        <Image url="@../../../../../../../../../OneDrive/Bilder/Bahnhoficon.png" />
+                        <Image url="@../../../../../resources/GameBoardIcons/Bahnhoficon.png" />
                      </image>
                   </ImageView>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="M 200">
@@ -575,7 +575,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="6">
+            <VBox id="gamefield" fx:id="id36" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="6">
                <children>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="EREIGNISFELD" textAlignment="CENTER" wrappingWidth="113.0">
                      <font>
@@ -588,7 +588,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="7">
+            <VBox id="gamefield" fx:id="id37" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="7">
                <children>
                   <Rectangle id="gamefield" arcHeight="5.0" arcWidth="5.0" fill="#1306bd" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="PARKSTRASSE" textAlignment="CENTER" wrappingWidth="113.0">
@@ -602,7 +602,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="8">
+            <VBox id="gamefield" fx:id="id38" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="8">
                <children>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="ZUSATZSTEUER" textAlignment="CENTER" wrappingWidth="59.0">
                      <font>
@@ -615,7 +615,7 @@
                      </font>
                   </Text>
                </children></VBox>
-            <VBox id="gamefield" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="9">
+            <VBox id="gamefield" fx:id="id39" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="9">
                <children>
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1306bd" height="12.0" stroke="BLACK" strokeType="INSIDE" width="116.0" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="SCHLOSSALLEE" textAlignment="CENTER" wrappingWidth="113.0">

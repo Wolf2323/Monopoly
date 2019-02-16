@@ -37,6 +37,86 @@ public class GameBoardController implements Initializable {
 	Label playerName;
 	@FXML
 	MenuBar menuBar;
+	@FXML
+	VBox id0;
+	@FXML
+	VBox id1;
+	@FXML
+	VBox id2;
+	@FXML
+	VBox id3;
+	@FXML
+	VBox id4;
+	@FXML
+	VBox id5;
+	@FXML
+	VBox id6;
+	@FXML
+	VBox id7;
+	@FXML
+	VBox id8;
+	@FXML
+	VBox id9;
+	@FXML
+	VBox id10;
+	@FXML
+	VBox id11;
+	@FXML
+	VBox id12;
+	@FXML
+	VBox id13;
+	@FXML
+	VBox id14;
+	@FXML
+	VBox id15;
+	@FXML
+	VBox id16;
+	@FXML
+	VBox id17;
+	@FXML
+	VBox id18;
+	@FXML
+	VBox id19;
+	@FXML
+	VBox id20;
+	@FXML
+	VBox id21;
+	@FXML
+	VBox id22;
+	@FXML
+	VBox id23;
+	@FXML
+	VBox id24;
+	@FXML
+	VBox id25;
+	@FXML
+	VBox id26;
+	@FXML
+	VBox id27;
+	@FXML
+	VBox id28;
+	@FXML
+	VBox id29;
+	@FXML
+	VBox id30;
+	@FXML
+	VBox id31;
+	@FXML
+	VBox id32;
+	@FXML
+	VBox id33;
+	@FXML
+	VBox id34;
+	@FXML
+	VBox id35;
+	@FXML
+	VBox id36;
+	@FXML
+	VBox id37;
+	@FXML
+	VBox id38;
+	@FXML
+	VBox id39;
 
 	private String uName;
 	private Stage roundWindow;
@@ -134,7 +214,9 @@ public class GameBoardController implements Initializable {
 	public void menuMainMenu(ActionEvent event) throws IOException {
 		goToMainMenu();
 	}
-
+	public void showTurnPopup(String name) {
+		// show who is on the move
+	}
 	public void goToMainMenu() throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("mainMenu.fxml"));

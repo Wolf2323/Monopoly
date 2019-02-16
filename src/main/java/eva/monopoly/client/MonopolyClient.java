@@ -10,6 +10,7 @@ import eva.monopoly.api.game.player.Player.Pawn;
 import eva.monopoly.api.network.client.Client;
 import eva.monopoly.api.network.messages.GameStateChanged;
 import eva.monopoly.api.network.messages.GameStateChanged.GameState;
+import eva.monopoly.api.network.messages.GetConnectedClients;
 import eva.monopoly.api.network.messages.PawnChanged;
 import eva.monopoly.api.network.messages.PlayerStatusChanged;
 import eva.monopoly.api.network.messages.PlayerStatusChanged.ConnectionState;
@@ -142,6 +143,9 @@ public class MonopolyClient extends Application {
 			LOG.info("Der Spieler " + state.getName() + " hat eine Bereitschaftsanfrage geschickt");
 			return;
 		});
+		//client.getSocketConnector().registerHandle(null, (con, state) -> {
+			
+		//});
 	}
 
 	public static void notifyServerPawnChanged(String pawnSelection) {
@@ -175,4 +179,10 @@ public class MonopolyClient extends Application {
 	public static void rollDice() {
 		client.getSocketConnector().sendMessage(new RollDice(name));
 	}
+
+	public static void getConnectedClients() {
+		client.getSocketConnector().sendMessage(new GetConnectedClients(name));
+		
+	}
+	
 }
