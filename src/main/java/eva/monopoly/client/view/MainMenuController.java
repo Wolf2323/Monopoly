@@ -397,7 +397,7 @@ public class MainMenuController implements Initializable {
 		case THIMBLE:
 			return "Thimble";
 		default:
-			return null;
+			return "No Selection";
 		}
 	}
 
