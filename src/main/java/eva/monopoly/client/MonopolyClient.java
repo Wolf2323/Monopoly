@@ -19,6 +19,7 @@ import eva.monopoly.api.network.messages.RollDice;
 import eva.monopoly.client.view.GameBoardController;
 import eva.monopoly.client.view.MainMenuController;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -141,8 +142,6 @@ public class MonopolyClient extends Application {
 				}
 				return;
 			}
-			LOG.info("Der Spieler " + state.getName() + " hat eine Bereitschaftsanfrage geschickt");
-			return;
 		});
 		client.getSocketConnector().registerHandle(GetConnectedClients.class, (con, state) -> {
 			for (Entry<String, eva.monopoly.api.network.messages.GetConnectedClients.Client> entry : state.getClients().entrySet()) {

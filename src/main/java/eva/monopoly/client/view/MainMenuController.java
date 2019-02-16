@@ -51,6 +51,7 @@ public class MainMenuController implements Initializable {
 	MenuBar menuBar;
 	private VBox layout;
 	private Stage newWindow;
+	private Label errorMessage;
 	private boolean isPawnErrorNotSelected = false;
 	private boolean isPawnErrorWrongSelected = false;
 	private ObservableList<PlayerLobby> tableItems;
@@ -153,6 +154,8 @@ public class MainMenuController implements Initializable {
 		}
 		newWindow.setTitle("Pre-Game Lobby");
 		Label tabelLabel = new Label("Players");
+		errorMessage = new Label("Diese Spielfigur ist nicht verfügbar!");
+		errorMessage.setVisible(false);
 		tabelLabel.setFont(new Font("Arial", 20));
 		TableColumn<PlayerLobby, String> name = new TableColumn<>("Name");
 		TableColumn<PlayerLobby, String> pawn = new TableColumn<>("Pawn");
@@ -205,7 +208,7 @@ public class MainMenuController implements Initializable {
 				MonopolyClient.notifyServerPawnChanged(pawnSelection);
 			}
 		}));
-		pawnBox.getChildren().addAll(pawnLabel, pawns);
+		pawnBox.getChildren().addAll(pawnLabel, pawns, errorMessage);
 		bottom.getChildren().addAll(buttons, pawnBox);
 		readyBttn.setOnAction(e -> { // send Server notification for ready,
 										// check if Pawn is selected
@@ -345,13 +348,12 @@ public class MainMenuController implements Initializable {
 
 	public void readyNotPossible() {
 		if (!isPawnErrorWrongSelected) {
-			Label errorMessage = new Label("Diese Spielfigur ist nicht verfügbar!");
 			errorMessage.setTextFill(Color.RED);
 			VBox pawnBox = ((VBox) ((HBox) layout.getChildren().get(2)).getChildren().get(1));
 			ComboBox<String> pawns = (ComboBox<String>) pawnBox.getChildren().get(1);
 			pawns.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
 			errorMessage.setTextFill(Color.RED);
-			pawnBox.getChildren().add(errorMessage);
+			errorMessage.setVisible(true);
 			isPawnErrorWrongSelected = true;
 		}
 	}
