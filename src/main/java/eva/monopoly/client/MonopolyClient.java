@@ -11,6 +11,8 @@ import eva.monopoly.api.network.client.Client;
 import eva.monopoly.api.network.messages.PawnChanged;
 import eva.monopoly.api.network.messages.PlayerStatusChanged;
 import eva.monopoly.api.network.messages.PlayerStatusChanged.ConnectionState;
+import eva.monopoly.api.network.messages.ReadyStatusChanged;
+import eva.monopoly.client.view.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -58,46 +60,61 @@ public class MonopolyClient extends Application {
 			switch (state.getState()) {
 			case CONNECTED:
 				LOG.info("Der Spieler " + state.getName() + " hat sich zum Spiel verbunden");
-				
+				MainMenuController.getInstance().addPlayer(state.getName());
 				return;
 			case DISCONNECTED:
 				LOG.info("Der Spieler " + state.getName() + " hat die Verbindung getrennt");
+				MainMenuController.getInstance().removePlayer(state.getName());
 				return;
 			case RECONNECTED:
 				LOG.info("Der Spieler " + state.getName() + " hat die Verbindung wiederhergestellt");
+				MainMenuController.getInstance().addPlayer(state.getName());
 				return;
 			case LOSTCONNECTION:
 				LOG.info("Der Spieler " + state.getName() + " hat die Verbindung verloren");
+				MainMenuController.getInstance().removePlayer(state.getName());
 				return;
 			}
 		});
 		client.getSocketConnector().registerHandle(PawnChanged.class, (con, state) -> {
 			switch (state.getPawn()) {
-				case TOPHAT:
-					LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Tophat gewechselt");
-					return;
-				case IRON:
-					LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Iron gewechselt");
-					return;
-				case SHOE:
-					LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Shoe gewechselt");
-					return;
-				case BATTLESHIP:
-					LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Battleship gewechselt");
-					return;
-				case WHEELBARROW:
-					LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Wheelbarrow gewechselt");
-					return;
-				case DOG:
-					LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Dog gewechselt");
-					return;
-				case CAR:
-					LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Car gewechselt");
-					return;
-				case THIMBLE:
-					LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Thimble gewechselt");
-					return;
+			case TOPHAT:
+				LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Tophat gewechselt");
+				MainMenuController.getInstance().changePawn(state.getName(), state.getPawn());
+				return;
+			case IRON:
+				LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Iron gewechselt");
+				MainMenuController.getInstance().changePawn(state.getName(), state.getPawn());
+				return;
+			case SHOE:
+				LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Shoe gewechselt");
+				MainMenuController.getInstance().changePawn(state.getName(), state.getPawn());
+				return;
+			case BATTLESHIP:
+				LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Battleship gewechselt");
+				MainMenuController.getInstance().changePawn(state.getName(), state.getPawn());
+				return;
+			case WHEELBARROW:
+				LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Wheelbarrow gewechselt");
+				MainMenuController.getInstance().changePawn(state.getName(), state.getPawn());
+				return;
+			case DOG:
+				LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Dog gewechselt");
+				MainMenuController.getInstance().changePawn(state.getName(), state.getPawn());
+				return;
+			case CAR:
+				LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Car gewechselt");
+				MainMenuController.getInstance().changePawn(state.getName(), state.getPawn());
+				return;
+			case THIMBLE:
+				LOG.info("Der Spieler " + state.getName() + " hat seinen Pawn zu Thimble gewechselt");
+				MainMenuController.getInstance().changePawn(state.getName(), state.getPawn());
+				return;
 			}
+		});
+		client.getSocketConnector().registerHandle(ReadyStatusChanged.class, (con, state) -> {
+			LOG.info("Der Spieler " + state.getName() + " hat eine Bereitschaftsanfrage geschickt");
+			return;
 		});
 	}
 
@@ -120,7 +137,8 @@ public class MonopolyClient extends Application {
 			client.getSocketConnector().sendMessage(new PawnChanged(Pawn.CAR));
 		}
 	}
+
 	public static void notifyServerReadyStatus() {
-		
+		client.getSocketConnector().sendMessage(new ReadyStatusChanged());
 	}
 }

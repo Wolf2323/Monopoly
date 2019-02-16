@@ -1,40 +1,33 @@
 package eva.monopoly.client.view;
 
 import java.io.IOException;
-import java.net.ConnectException;
-import java.net.InetAddress;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
 import eva.monopoly.api.game.player.Player;
 import eva.monopoly.api.game.player.Player.Pawn;
-import eva.monopoly.api.network.client.Client;
 import eva.monopoly.client.MonopolyClient;
 import eva.monopoly.client.utils.PlayerLobby;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -44,6 +37,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class MainMenuController implements Initializable {
+
 	@FXML
 	Button startBttn;
 	@FXML
@@ -54,10 +48,13 @@ public class MainMenuController implements Initializable {
 	Label uNameLabel;
 	@FXML
 	MenuBar menuBar;
+
+	private Stage newWindow;
 	private boolean isPawnErrorNotSelected = false;
 	private boolean isPawnErrorWrongSelected = false;
 	private ObservableList<PlayerLobby> tableItems;
 	private String uName;
+	private TableView<PlayerLobby> connectedPlayers = new TableView<>();
 	private Pattern p = Pattern.compile("^" + "(((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}" // Domain
 																									// name
 			+ "|" + "localhost" // localhost
@@ -65,23 +62,24 @@ public class MainMenuController implements Initializable {
 			+ ":" + "[0-9]{1,5}$"); // Port
 
 	private static MainMenuController instance;
+
 	public static MainMenuController getInstance() {
-		if (MainMenuController.instance == null) {
-			MainMenuController.instance = new MainMenuController();
-		}
-		return MainMenuController.instance;
-	}
-	public MainMenuController() {
-		
-	}
-	public void initData(String nickname) {
-		uName = nickname;
-		uNameLabel.setText("Hello, " + uName);
+		return instance;
 	}
 
+	public MainMenuController() {
+		instance = this;
+	}
+
+	public void initData(String nickname) {
+		uName = nickname;
+		uNameLabel.setText("Hello " + uName);
+	}
+
+	// find Game with a different host, show window to enter ip
 	public void findGame(ActionEvent event) {
-		// find Game with a different host, show window to enter ip
-		Stage newWindow = new Stage();
+
+		newWindow = new Stage();
 		newWindow.initModality(Modality.APPLICATION_MODAL);
 		newWindow.setTitle("Find Game");
 		newWindow.setMinWidth(500);
@@ -94,12 +92,11 @@ public class MainMenuController implements Initializable {
 		TextField portField = new TextField();
 		portField.setPromptText("Enter Port");
 		portField.setMaxWidth(100);
-		portField.setOnKeyPressed(e -> {
+		portField.setOnKeyPressed(e -> { // Enter Button confirms input
 			if (e.getCode() == KeyCode.ENTER) {
 				try {
-					goToGameLobby(newWindow, ipField.getText(), portField.getText(), event);
+					goToGameLobby(ipField.getText(), portField.getText(), event);
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -107,15 +104,14 @@ public class MainMenuController implements Initializable {
 		ipAndPort.getChildren().addAll(ipField, separator, portField);
 		Button okBttn = new Button("Continue");
 		Button cancelBttn = new Button("Cancel");
-		okBttn.setOnAction(e -> {
+		okBttn.setOnAction(e -> { // switch to the Pre-GameLobby
 			try {
-				goToGameLobby(newWindow, ipField.getText(), portField.getText(), event);
+				goToGameLobby(ipField.getText(), portField.getText(), event);
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		});
-		cancelBttn.setOnAction(e -> newWindow.close());
+		cancelBttn.setOnAction(e -> newWindow.close()); // close Window
 		VBox layout = new VBox(10);
 		layout.setPadding(new Insets(10, 10, 10, 10));
 		layout.getChildren().addAll(ipAndPort, okBttn, cancelBttn);
@@ -125,6 +121,7 @@ public class MainMenuController implements Initializable {
 		newWindow.showAndWait();
 	}
 
+	// switch to startup screen
 	public void changeNick(ActionEvent event) throws IOException {
 		Parent startUpParent = FXMLLoader.load(getClass().getResource("startupWindow.fxml"));
 		Scene startUp = new Scene(startUpParent);
@@ -133,34 +130,36 @@ public class MainMenuController implements Initializable {
 		window.show();
 	}
 
-	private void goToGameLobby(Stage stage, String ip, String port, ActionEvent event) throws IOException {
+	// try to connect to Server, show Pre-Game Lobby
+	private void goToGameLobby(String ip, String port, ActionEvent event) throws IOException {
 		// TODO entferene HACK
 		if (!p.matcher(ip + ":" + port).matches() && !ip.equalsIgnoreCase("Hack")) {
-			errorWindow(stage, event, ip, port, "input");
+			errorWindow(event, ip, port, "input");
 			return;
 		}
 		try {
 			MonopolyClient.initializeClient(ip, Integer.parseInt(port), uName);
 		} catch (IOException | NumberFormatException e) {
-			// TODO Better Exception handling
 			e.printStackTrace();
 			if (!ip.equalsIgnoreCase("Hack")) {
-				errorWindow(stage, event, ip, port, "connection");
+				errorWindow(event, ip, port, "connection");
 				return;
+			} else {
+				addPlayer(uName);
 			}
 		}
-		Stage newWindow = stage;
 		newWindow.setTitle("Pre-Game Lobby");
 		Label tabelLabel = new Label("Players");
 		tabelLabel.setFont(new Font("Arial", 20));
-		TableView<PlayerLobby> connectedPlayers = new TableView<>();
-		TableColumn name = new TableColumn("Name");
-		TableColumn pawn = new TableColumn("Pawn");
-		TableColumn ready = new TableColumn("Ready");
+		TableColumn<PlayerLobby, String> name = new TableColumn<>("Name");
+		TableColumn<PlayerLobby, String> pawn = new TableColumn<>("Pawn");
+		TableColumn<PlayerLobby, String> ready = new TableColumn<>("Ready");
 		name.setPrefWidth(200);
 		pawn.setPrefWidth(100);
 		ready.setPrefWidth(100);
-		// TODO PROPER TABLEVIEW HANDLER
+		name.setCellValueFactory(new PropertyValueFactory<>("name"));
+		pawn.setCellValueFactory(new PropertyValueFactory<>("pawn"));
+		ready.setCellValueFactory(new PropertyValueFactory<>("readyStatus"));
 		connectedPlayers.getColumns().addAll(name, pawn, ready);
 		connectedPlayers.setItems(tableItems);
 		HBox bottom = new HBox(10);
@@ -178,40 +177,51 @@ public class MainMenuController implements Initializable {
 		ObservableList<String> c = FXCollections.observableArrayList();
 		c.addAll("TOPHAT", "THIMBLE", "IRON", "SHOE", "BATTLESHIP", "WHEELBARROW", "DOG", "CAR");
 		pawns.setItems(c);
-		pawns.setOnAction((e -> {
+		pawns.setOnAction((e -> { // Pawn Selection Action
 			if (pawns.getSelectionModel().getSelectedItem() != null) {
 				String pawnSelection = pawns.getSelectionModel().getSelectedItem();
+				// TODO entferne if Abfragen
+				if (pawnSelection.equalsIgnoreCase("TOPHAT")) {
+					changePawn(uName, Pawn.TOPHAT);
+				} else if (pawnSelection.equalsIgnoreCase("THIMBLE")) {
+					changePawn(uName, Pawn.THIMBLE);
+				} else if (pawnSelection.equalsIgnoreCase("IRON")) {
+					changePawn(uName, Pawn.IRON);
+				} else if (pawnSelection.equalsIgnoreCase("SHOE")) {
+					changePawn(uName, Pawn.SHOE);
+				} else if (pawnSelection.equalsIgnoreCase("BATTLESHIP")) {
+					changePawn(uName, Pawn.BATTLESHIP);
+				} else if (pawnSelection.equalsIgnoreCase("WHEELBARROW")) {
+					changePawn(uName, Pawn.WHEELBARROW);
+				} else if (pawnSelection.equalsIgnoreCase("DOG")) {
+					changePawn(uName, Pawn.DOG);
+				} else if (pawnSelection.equalsIgnoreCase("CAR")) {
+					changePawn(uName, Pawn.CAR);
+				}
 				MonopolyClient.notifyServerPawnChanged(pawnSelection);
 			}
 		}));
 		pawnBox.getChildren().addAll(pawnLabel, pawns);
 		bottom.getChildren().addAll(buttons, pawnBox);
-		readyBttn.setOnAction(e -> {
+		readyBttn.setOnAction(e -> { // send Server notification for ready,
+										// check if Pawn is selected
 			// TODO Code is placeholder,check if a pawn is selected(notify if
 			// not), notify Server of ready status
-			Parent gameBoardParent;
-			try {
-				if (pawns.getSelectionModel().getSelectedItem() == null) {
-					if (!isPawnErrorNotSelected) {
-						pawns.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
-						Label errorLabel = new Label("Bitte eine Spielfigur auswählen!");
-						errorLabel.setTextFill(Color.RED);
-						pawnBox.getChildren().add(errorLabel);
-						isPawnErrorNotSelected = true;
-					}
-				} else {
-					newWindow.close();
-					gameBoardParent = FXMLLoader.load(getClass().getResource("gameBoard.fxml"));
-					Scene gameBoard = new Scene(gameBoardParent);
-					Stage window = (Stage) menuBar.getScene().getWindow();
-					window.setScene(gameBoard);
-					window.show();
+			if (pawns.getSelectionModel().getSelectedItem() == null) {
+				if (!isPawnErrorNotSelected) {
+					pawns.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
+					Label errorLabel = new Label("Bitte eine Spielfigur auswählen!");
+					errorLabel.setTextFill(Color.RED);
+					pawnBox.getChildren().add(errorLabel);
+					isPawnErrorNotSelected = true;
 				}
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			} else {
+				// TODO entferne changeReady()
+				changeReady(uName);
+				MonopolyClient.notifyServerReadyStatus();
 			}
 		});
-		cancelBttn.setOnAction(e -> newWindow.close());
+		cancelBttn.setOnAction(e -> newWindow.close()); // close window
 		VBox layout = new VBox(10);
 		layout.setPadding(new Insets(10, 10, 10, 10));
 		layout.getChildren().addAll(tabelLabel, connectedPlayers, bottom);
@@ -220,8 +230,8 @@ public class MainMenuController implements Initializable {
 		newWindow.setScene(scene);
 	}
 
-	private void errorWindow(Stage stage, ActionEvent event, String ip, String port, String type) {
-		Stage newWindow = stage;
+	// show errors when somethings wrong in the connection screen
+	private void errorWindow(ActionEvent event, String ip, String port, String type) {
 		newWindow.setTitle("Find Game");
 		HBox ipAndPort = new HBox();
 		ipAndPort.setAlignment(Pos.CENTER);
@@ -239,9 +249,8 @@ public class MainMenuController implements Initializable {
 		portField.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
 				try {
-					goToGameLobby(newWindow, ipField.getText(), portField.getText(), event);
+					goToGameLobby(ipField.getText(), portField.getText(), event);
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -251,9 +260,8 @@ public class MainMenuController implements Initializable {
 		Button cancelBttn = new Button("Cancel");
 		okBttn.setOnAction(e -> {
 			try {
-				goToGameLobby(newWindow, ipField.getText(), portField.getText(), event);
+				goToGameLobby(ipField.getText(), portField.getText(), event);
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		});
@@ -277,13 +285,26 @@ public class MainMenuController implements Initializable {
 		Platform.exit();
 	}
 
-	// TODO HANDLER FOR TABLEVIEW
 	public void addPlayer(String name, Pawn pawn) {
 		tableItems.add(new PlayerLobby(name, pawnToString(pawn)));
+		connectedPlayers.refresh();
+
 	}
 
 	public void addPlayer(String name) {
 		tableItems.add(new PlayerLobby(name));
+		connectedPlayers.refresh();
+
+	}
+
+	public void removePlayer(String name) {
+		for (PlayerLobby p : tableItems) {
+			if (p.getName().equals(name)) {
+				tableItems.remove(p);
+			}
+		}
+		connectedPlayers.refresh();
+
 	}
 
 	public void changePawn(String name, Pawn pawn) {
@@ -291,6 +312,34 @@ public class MainMenuController implements Initializable {
 			if (p.getName().equals(name)) {
 				p.setPawn(pawnToString(pawn));
 			}
+		}
+		connectedPlayers.refresh();
+
+	}
+
+	public void changeReady(String name) {
+		for (PlayerLobby p : tableItems) {
+			if (p.getName().equals(name)) {
+				p.setReadyStatus();
+			}
+		}
+		connectedPlayers.refresh();
+
+	}
+
+	public void gameStart() {
+		newWindow.close();
+		Parent gameBoardParent;
+		try {
+			gameBoardParent = FXMLLoader.load(getClass().getResource("gameBoard.fxml"));
+			Scene gameBoard = new Scene(gameBoardParent);
+			GameBoardController menuControl = GameBoardController.getInstance();
+			menuControl.initData(uName);
+			Stage window = (Stage) menuBar.getScene().getWindow();
+			window.setScene(gameBoard);
+			window.show();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -321,4 +370,5 @@ public class MainMenuController implements Initializable {
 			return null;
 		}
 	}
+
 }

@@ -32,14 +32,25 @@ public class GameBoardController implements Initializable {
 	MenuBar menuBar;
 
 	private String uName;
+	
+	private static GameBoardController instance;
+
+	public static GameBoardController getInstance() {
+		return instance;
+	}
+
+	public GameBoardController() {
+		instance = this;
+	}
 
 	public void initData(String uName) {
 		this.uName = uName;
+		playerName.setText(uName);
 	}
 
-	private void refreshMoney(Player player) {
+	private void refreshMoney(String amount) {
 		// show Money of the Player
-		money.setText("" + player.getMoney());
+		money.setText("" + amount);
 	}
 
 	public void showCards() {
@@ -50,11 +61,7 @@ public class GameBoardController implements Initializable {
 		// get Streets from Player and show it in an alert window
 	}
 
-	private void showNickname(Player player) {
-		playerName.setText(player.getName());
-	}
-
-	public void showRoundData() {
+	public void startRound() {
 		/*
 		 * show Dice roll, show data of target field, give button options to buy
 		 * or ignore if field is not occupied, give option to place house if
@@ -86,6 +93,5 @@ public class GameBoardController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		playerName.setText(uName);
 	}
 }
