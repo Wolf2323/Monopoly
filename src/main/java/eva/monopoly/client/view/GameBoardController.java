@@ -300,23 +300,23 @@ public class GameBoardController implements Initializable {
 				VBox sRents = new VBox(10);
 				Label lRent = new Label("Miete:");
 				if (buyStreet instanceof BuyableNormalStreet) {
-				BuyableNormalStreet buyNormStreet = (BuyableNormalStreet) buyStreet;
-				Label l0Rent = new Label("Kein Haus:");
-				Label l1Rent = new Label("Ein Haus:");
-				Label l2Rent = new Label("Zwei Häuser:");
-				Label l3Rent = new Label("Drei Häuser:");
-				Label l4Rent = new Label("Vier Häuser:");
-				Label l5Rent = new Label("Hotel:");
-				Label l6Rent = new Label("Gebäudekosten:");
-				Label s0Rent = new Label("" + buyNormStreet.getNohouse()); // TODO DATA insert
-				Label s1Rent = new Label("Placeholder");
-				Label s2Rent = new Label("Placeholder");
-				Label s3Rent = new Label("Placeholder");
-				Label s4Rent = new Label("Placeholder");
-				Label s5Rent = new Label("Placeholder");
-				Label s6Rent = new Label("Placeholder"); // Gebäudekosten
-				lRents.getChildren().addAll(l0Rent, l1Rent, l2Rent, l3Rent, l4Rent, l5Rent, l6Rent);
-				sRents.getChildren().addAll(s0Rent, s1Rent, s2Rent, s3Rent, s4Rent, s5Rent, s6Rent);
+					BuyableNormalStreet buyNormStreet = (BuyableNormalStreet) buyStreet;
+					Label l0Rent = new Label("Kein Haus:");
+					Label l1Rent = new Label("Ein Haus:");
+					Label l2Rent = new Label("Zwei Häuser:");
+					Label l3Rent = new Label("Drei Häuser:");
+					Label l4Rent = new Label("Vier Häuser:");
+					Label l5Rent = new Label("Hotel:");
+					Label l6Rent = new Label("Gebäudekosten:");
+					Label s0Rent = new Label("" + buyNormStreet.getNohouse());
+					Label s1Rent = new Label("" + buyNormStreet.getOnehouse());
+					Label s2Rent = new Label("" + buyNormStreet.getTwohouses());
+					Label s3Rent = new Label("" + buyNormStreet.getThreehouses());
+					Label s4Rent = new Label("" + buyNormStreet.getFourhouses());
+					Label s5Rent = new Label("" + buyNormStreet.getHotel());
+					Label s6Rent = new Label("" + buyNormStreet.getHousecost()); // Gebäudekosten
+					lRents.getChildren().addAll(l0Rent, l1Rent, l2Rent, l3Rent, l4Rent, l5Rent, l6Rent);
+					sRents.getChildren().addAll(s0Rent, s1Rent, s2Rent, s3Rent, s4Rent, s5Rent, s6Rent);
 				}
 				rent.getChildren().addAll(lRents, sRents);
 				HBox cost = new HBox(10);
