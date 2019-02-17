@@ -38,6 +38,8 @@ public class GameBoardController implements Initializable {
 	@FXML
 	MenuBar menuBar;
 	@FXML
+	Label turnName;
+	@FXML
 	VBox id0;
 	@FXML
 	VBox id1;
@@ -218,8 +220,8 @@ public class GameBoardController implements Initializable {
 		goToMainMenu();
 	}
 
-	public void showTurnPopup(String name) {
-		// show who is on the move
+	public void setTurnName(String name) {
+		turnName.setText(name);
 	}
 
 	public void goToMainMenu() throws IOException {

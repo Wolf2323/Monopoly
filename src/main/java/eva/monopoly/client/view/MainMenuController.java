@@ -49,6 +49,8 @@ public class MainMenuController implements Initializable {
 	Label uNameLabel;
 	@FXML
 	MenuBar menuBar;
+	private String port;
+	private String ip;
 	private VBox layout;
 	private Stage newWindow;
 	private Label errorMessage;
@@ -145,8 +147,10 @@ public class MainMenuController implements Initializable {
 	// try to connect to Server, show Pre-Game Lobby
 	private void goToGameLobby(String ip, String port, ActionEvent event) throws IOException {
 		// TODO entferene HACK
+		this.ip = ip;
+		this.port = port;
 		if (!p.matcher(ip + ":" + port).matches() && !ip.equalsIgnoreCase("Hack")) {
-			errorWindow(event, ip, port, "input");
+			errorWindow(ip, port, "input");
 			return;
 		}
 		try {
@@ -155,7 +159,7 @@ public class MainMenuController implements Initializable {
 		} catch (IOException | NumberFormatException e) {
 			e.printStackTrace();
 			if (!ip.equalsIgnoreCase("Hack")) {
-				errorWindow(event, ip, port, "connection");
+				errorWindow(ip, port, "connection");
 				return;
 			} else {
 				addPlayer(uName);
@@ -240,7 +244,6 @@ public class MainMenuController implements Initializable {
 		});
 		cancelBttn.setOnAction(e -> {
 			newWindow.close();
-			MonopolyClient.disconnect();
 		}); // close window
 		layout = new VBox(10);
 		layout.setPadding(new Insets(10, 10, 10, 10));
@@ -248,11 +251,14 @@ public class MainMenuController implements Initializable {
 		layout.setAlignment(Pos.CENTER);
 		Scene scene = new Scene(layout);
 		newWindow.setScene(scene);
-		newWindow.setOnCloseRequest(e -> MonopolyClient.disconnect());
+		newWindow.setOnCloseRequest(e -> {
+			tableItems.clear();
+			MonopolyClient.disconnect();
+		});
 	}
 
 	// show errors when somethings wrong in the connection screen
-	private void errorWindow(ActionEvent event, String ip, String port, String type) {
+	private void errorWindow(String ip, String port, String type) {
 		newWindow.setTitle("Find Game");
 		HBox ipAndPort = new HBox();
 		ipAndPort.setAlignment(Pos.CENTER);
@@ -270,7 +276,7 @@ public class MainMenuController implements Initializable {
 		portField.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
 				try {
-					goToGameLobby(ipField.getText(), portField.getText(), event);
+					goToGameLobby(ipField.getText(), portField.getText(), null);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -279,7 +285,7 @@ public class MainMenuController implements Initializable {
 		ipField.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
 				try {
-					goToGameLobby(ipField.getText(), portField.getText(), event);
+					goToGameLobby(ipField.getText(), portField.getText(), null);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -290,7 +296,7 @@ public class MainMenuController implements Initializable {
 		Button cancelBttn = new Button("Cancel");
 		okBttn.setOnAction(e -> {
 			try {
-				goToGameLobby(ipField.getText(), portField.getText(), event);
+				goToGameLobby(ipField.getText(), portField.getText(), null);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
@@ -301,6 +307,8 @@ public class MainMenuController implements Initializable {
 			errorMessage.setText("Keine gültige IP und Port Eingabe!");
 		} else if (type.equalsIgnoreCase("connection")) {
 			errorMessage.setText("Verbindung zu diesem Server nicht möglich!");
+		} else if (type.equalsIgnoreCase("gameInProgress")) {
+			errorMessage.setText("Das Spiel läuft bereits oder ist schon beendet!");
 		}
 		errorMessage.setTextFill(Color.RED);
 		VBox layout = new VBox(10);
@@ -425,6 +433,10 @@ public class MainMenuController implements Initializable {
 		} else {
 			return "No Selection";
 		}
+	}
+
+	public void connectionRefused() {
+		errorWindow(this.ip, this.port, "gameInProgress");
 	}
 
 }

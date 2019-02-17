@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eva.monopoly.api.game.player.Player.Pawn;
+import eva.monopoly.api.network.api.SocketConnector;
 import eva.monopoly.api.network.client.Client;
 import eva.monopoly.api.network.messages.GameStateChanged;
 import eva.monopoly.api.network.messages.GameStateChanged.GameState;
@@ -74,10 +75,27 @@ public class MonopolyClient extends Application {
 			case DISCONNECTED:
 				LOG.info("Der Spieler " + state.getName() + " hat die Verbindung getrennt");
 				MainMenuController.getInstance().removePlayer(state.getName());
+				if (state.getName().equals(name)) {
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							MainMenuController.getInstance().connectionRefused();
+						}
+					});
+					disconnect();
+				}
 				return;
 			case RECONNECTED:
 				LOG.info("Der Spieler " + state.getName() + " hat die Verbindung wiederhergestellt");
 				MainMenuController.getInstance().addPlayer(state.getName());
+				if (state.getName().equals(name)) {
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							MainMenuController.getInstance().gameStart();
+						}
+					});
+				}
 				return;
 			case LOSTCONNECTION:
 				LOG.info("Der Spieler " + state.getName() + " hat die Verbindung verloren");
@@ -160,6 +178,7 @@ public class MonopolyClient extends Application {
 					public void run() {
 						try {
 							GameBoardController.getInstance().goToMainMenu();
+							disconnect();
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
@@ -228,6 +247,7 @@ public class MonopolyClient extends Application {
 	public void stop() {
 		System.out.println("stop");
 		disconnect();
+		SocketConnector.shutdownThreadPools();
 		Platform.exit();
 	}
 

@@ -660,37 +660,64 @@
          <children>
             <Label alignment="CENTER" text="GELD">
                <HBox.margin>
-                  <Insets bottom="10.0" left="10.0" top="10.0" />
+                  <Insets bottom="10.0" left="10.0" top="20.0" />
                </HBox.margin>
             </Label>
             <TextField fx:id="money" alignment="CENTER" editable="false" prefHeight="31.0" prefWidth="104.0">
                <HBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="15.0" />
                </HBox.margin>
             </TextField>
             <Label alignment="CENTER" text="STRASSEN">
                <HBox.margin>
-                  <Insets bottom="10.0" left="10.0" top="10.0" />
+                  <Insets bottom="10.0" left="10.0" top="20.0" />
                </HBox.margin>
             </Label>
-            <Button fx:id="streets" mnemonicParsing="false" onAction="#showStreets" text="ANZEIGEN">
+            <Button fx:id="streetsBttn" mnemonicParsing="false" onAction="#showStreets" text="ANZEIGEN">
                <HBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="15.0" />
                </HBox.margin>
             </Button>
             <Label alignment="CENTER" text="KARTEN">
                <HBox.margin>
-                  <Insets bottom="10.0" left="10.0" top="10.0" />
+                  <Insets bottom="10.0" left="10.0" top="20.0" />
                </HBox.margin>
             </Label>
-            <Button fx:id="cards" mnemonicParsing="false" onAction="#showCards" text="ANZEIGEN">
+            <Button fx:id="cardsBttn" mnemonicParsing="false" onAction="#showCards" text="ANZEIGEN">
                <HBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="15.0" />
                </HBox.margin>
             </Button>
-            <Label fx:id="playerName">
+            <Label text="SPIELER">
                <HBox.margin>
-                  <Insets bottom="10.0" left="600.0" top="10.0" />
+                  <Insets bottom="10.0" left="10.0" top="20.0" />
+               </HBox.margin>
+            </Label>
+            <Button fx:id="playersBttn" mnemonicParsing="false" onAction="#showPlayers" text="ANZEIGEN">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="15.0" />
+               </HBox.margin>
+            </Button>
+            <VBox alignment="CENTER" prefHeight="60.0">
+               <children>
+                  <Label prefHeight="21.0" text="Am Zug">
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="turnName" text="Player">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" />
+                     </VBox.margin>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </VBox>
+            <Label fx:id="playerName" text="Player">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="400.0" top="20.0" />
                </HBox.margin>
             </Label>
          </children></HBox>
