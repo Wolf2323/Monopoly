@@ -49,10 +49,6 @@ public class MonopolyClient extends Application {
 	public static void initializeClient(String ip, int port, String nick) throws UnknownHostException, IOException {
 		client = new Client(ip, port, nick, (con, e) -> {
 			try {
-				con.getSocket().close();
-			} catch (IOException e1) {
-			}
-			try {
 				con.closeConnection();
 			} catch (IOException e1) {
 			}
