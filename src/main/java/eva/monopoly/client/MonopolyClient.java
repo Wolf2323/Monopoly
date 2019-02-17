@@ -19,6 +19,7 @@ import eva.monopoly.api.network.messages.RollDice;
 import eva.monopoly.client.view.GameBoardController;
 import eva.monopoly.client.view.MainMenuController;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -122,23 +123,46 @@ public class MonopolyClient extends Application {
 			switch (state.getGameState()) {
 			case PREGAME:
 				LOG.info("Der Spieler " + state.getName() + " ist nicht bereit");
-				MainMenuController.getInstance().readyNotPossible();
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						MainMenuController.getInstance().readyNotPossible();
+					}
+				});
 				return;
 			case READY:
 				LOG.info("Der Spieler " + state.getName() + " ist bereit");
-				MainMenuController.getInstance().changeReady(state.getName());
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						MainMenuController.getInstance().changeReady(state.getName());
+					}
+				});
+
 				return;
 			case INGAME:
 				LOG.info("Das Spiel startet");
-				MainMenuController.getInstance().gameStart();
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						MainMenuController.getInstance().gameStart();
+					}
+				});
+
+				;
 				return;
 			case FINISHED:
 				LOG.info("Das Spiel ist beendet");
-				try {
-					GameBoardController.getInstance().goToMainMenu();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								GameBoardController.getInstance().goToMainMenu();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					});
 				return;
 			}
 		});
