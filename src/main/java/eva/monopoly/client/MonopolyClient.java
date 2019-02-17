@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import eva.monopoly.api.game.player.Player.Pawn;
 import eva.monopoly.api.network.api.SocketConnector;
 import eva.monopoly.api.network.client.Client;
+import eva.monopoly.api.network.messages.BuyStreet;
 import eva.monopoly.api.network.messages.GameStateChanged;
 import eva.monopoly.api.network.messages.GameStateChanged.GameState;
 import eva.monopoly.api.network.messages.GetConnectedClients;
@@ -19,6 +20,7 @@ import eva.monopoly.api.network.messages.PlayerStatusChanged;
 import eva.monopoly.api.network.messages.PlayerStatusChanged.ConnectionState;
 import eva.monopoly.api.network.messages.RollDice;
 import eva.monopoly.api.network.messages.StartStopRound;
+import eva.monopoly.api.network.messages.StreetEntered;
 import eva.monopoly.api.network.messages.Unjail;
 import eva.monopoly.api.network.messages.Unjail.UnjailReason;
 import eva.monopoly.client.view.GameBoardController;
@@ -35,6 +37,7 @@ public class MonopolyClient extends Application {
 	private static Client client;
 	private static String name;
 	private static boolean connected = false;
+	private static Thread toInterrupt;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -191,11 +194,32 @@ public class MonopolyClient extends Application {
 				Platform.runLater(() -> {
 					GameBoardController.getInstance().startRound();
 				});
+				toInterrupt = Thread.currentThread();
+				try {
+					toInterrupt.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			} else {
 				Platform.runLater(() -> {
-					GameBoardController.getInstance().refreshTurn(state);
-					LOG.info("Der Spieler " + state.getName() + "ist am Zug");
+					GameBoardController.getInstance().refreshTurnName(state.getName());
+					LOG.info("Der Spieler " + state.getName() + " ist am Zug");
 				});
+			}
+		});
+		client.getSocketConnector().registerHandle(StreetEntered.class, (con, state) -> {
+			if (state.getName().equals(name)) {
+				Platform.runLater(() -> {
+					GameBoardController.getInstance().showMoveData(state.getStreet(), state.getMoneyAmount(), state.getNewMoney());
+				});
+				toInterrupt = Thread.currentThread();
+				try {
+					toInterrupt.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			} else {
+				LOG.info("Der Spieler " + state.getName() + " ist auf " + state.getStreet().getName() + " gelandet!");
 			}
 		});
 	}
@@ -258,13 +282,23 @@ public class MonopolyClient extends Application {
 			client.getSocketConnector().sendMessage(new Unjail(name, UnjailReason.PAYED));
 		} else if (type.equals("card")) {
 			client.getSocketConnector().sendMessage(new Unjail(name, UnjailReason.CARD));
-		} else if (type.equals("doublets")) {
-			client.getSocketConnector().sendMessage(new Unjail(name, UnjailReason.DOUBLETS));
 		}
 	}
 
 	public static void getStreetData() {
-		client.getSocketConnector().sendMessage(new GetMoveData(name));		
+		toInterrupt.interrupt();
+	}
+
+	public static void buyStreet(boolean buy) {
+		client.getSocketConnector().sendMessage(new BuyStreet(name, buy)); 
+	}
+
+	public static void bid(int amount) {
+		//TODO client.getSocketConnector().sendMessage(new Bid(name, amount)); // TODO create ExchangeMEssage
+	}
+
+	public static void payFee() {
+		//TODO client.getSocketConnector().sendMessage(new PayFee(name)); // TODO create ExchangeMessage
 	}
 
 }

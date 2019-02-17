@@ -4,9 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.OptionalInt;
 import java.util.ResourceBundle;
 
 import eva.monopoly.api.game.player.Player;
+import eva.monopoly.api.game.street.BuyableStreet;
+import eva.monopoly.api.game.street.Street;
+import eva.monopoly.api.game.street.streets.BuyableNormalStreet;
 import eva.monopoly.client.MonopolyClient;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -32,6 +36,8 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -245,9 +251,191 @@ public class GameBoardController implements Initializable {
 		diceNumber1.setText("" + dice1);
 		diceNumber2.setText("" + dice2);
 		continueBttn.setText("Laufen");
-		continueBttn.setOnAction(e -> { 
+		continueBttn.setOnAction(e -> {
 			MonopolyClient.getStreetData();
 		});
+	}
+
+	public void showMoveData(Street street, OptionalInt optionalInt, int i) { // show
+																				// Data
+																				// of
+																				// the
+																				// Street
+																				// depending
+																				// on
+																				// type
+																				// of
+		// street and give corresponding options
+		if (street instanceof BuyableStreet) {
+			BuyableStreet buyStreet = (BuyableStreet) street;
+			if (buyStreet.getOwner() != null) {
+				Rectangle color = new Rectangle();
+				color.setWidth(116);
+				color.setHeight(12);
+				if (buyStreet.getGroup().equalsIgnoreCase("brown")) {
+					color.setFill(Color.web("#6b004d"));
+				} else if (buyStreet.getGroup().equalsIgnoreCase("lightblue")) {
+					color.setFill(Color.web("#70a9ff"));
+				} else if (buyStreet.getGroup().equalsIgnoreCase("pink")) {
+					color.setFill(Color.web("#ff2370"));
+				} else if (buyStreet.getGroup().equalsIgnoreCase("orange")) {
+					color.setFill(Color.web("#ff8600"));
+				} else if (buyStreet.getGroup().equalsIgnoreCase("red")) {
+					color.setFill(Color.RED);
+				} else if (buyStreet.getGroup().equalsIgnoreCase("yellow")) {
+					color.setFill(Color.web("#ffe400"));
+				} else if (buyStreet.getGroup().equalsIgnoreCase("green")) {
+					color.setFill(Color.web("#04bf19"));
+				} else if (buyStreet.getGroup().equalsIgnoreCase("blue")) {
+					color.setFill(Color.web("#1306bd"));
+				} else {
+					color = null;
+				}
+				HBox name = new HBox(10);
+				Label lName = new Label("Name:");
+				Label sName = new Label(buyStreet.getName());
+				name.getChildren().addAll(lName, sName);
+				HBox rent = new HBox(10);
+				VBox lRents = new VBox(10);
+				VBox sRents = new VBox(10);
+				Label lRent = new Label("Miete:");
+				if (buyStreet instanceof BuyableNormalStreet) {
+				BuyableNormalStreet buyNormStreet = (BuyableNormalStreet) buyStreet;
+				Label l0Rent = new Label("Kein Haus:");
+				Label l1Rent = new Label("Ein Haus:");
+				Label l2Rent = new Label("Zwei Häuser:");
+				Label l3Rent = new Label("Drei Häuser:");
+				Label l4Rent = new Label("Vier Häuser:");
+				Label l5Rent = new Label("Hotel:");
+				Label l6Rent = new Label("Gebäudekosten:");
+				Label s0Rent = new Label("" + buyNormStreet.getNohouse()); // TODO DATA insert
+				Label s1Rent = new Label("Placeholder");
+				Label s2Rent = new Label("Placeholder");
+				Label s3Rent = new Label("Placeholder");
+				Label s4Rent = new Label("Placeholder");
+				Label s5Rent = new Label("Placeholder");
+				Label s6Rent = new Label("Placeholder"); // Gebäudekosten
+				lRents.getChildren().addAll(l0Rent, l1Rent, l2Rent, l3Rent, l4Rent, l5Rent, l6Rent);
+				sRents.getChildren().addAll(s0Rent, s1Rent, s2Rent, s3Rent, s4Rent, s5Rent, s6Rent);
+				}
+				rent.getChildren().addAll(lRents, sRents);
+				HBox cost = new HBox(10);
+				Label lCost = new Label("Kosten:");
+				Label sCost = new Label("Placeholder"); // TODO DATA insert
+				cost.getChildren().addAll(lCost, sCost);
+				HBox mortg = new HBox(10);
+				Label lMortg = new Label("Hypothek:");
+				Label sMortg = new Label("Placeholder"); // TODO DATA insert
+				cost.getChildren().addAll(lMortg, sMortg);
+				layout = new VBox(10);
+				if (color != null) {
+					layout.getChildren().add(color);
+				}
+				HBox actions = new HBox(10);
+				Button buy = new Button("Kaufen");
+				Button ignore = new Button("Ignorieren");
+				buy.setOnAction(e -> {
+					MonopolyClient.buyStreet(true); // TODO correct Parameter
+				});
+				ignore.setOnAction(e -> {
+					MonopolyClient.buyStreet(false);
+					auction();
+				});
+				actions.getChildren().addAll(buy, ignore);
+				layout.setPadding(new Insets(10, 10, 10, 10));
+				layout.getChildren().addAll(name, lRent, rent, cost, mortg, actions);
+				layout.setAlignment(Pos.CENTER);
+				Scene scene = new Scene(layout);
+				roundWindow.setScene(scene);
+			} else {
+
+				// case normal street Owned
+
+				Rectangle color = new Rectangle();
+				color.setWidth(116);
+				color.setHeight(12);
+				if ("Placeholder".equals("brown")) {// TODO proper if handling
+					color.setFill(Color.web("#6b004d"));
+				} else if ("Placeholder".equals("lightblue")) {
+					color.setFill(Color.web("#70a9ff"));
+				} else if ("Placeholder".equals("pink")) {
+					color.setFill(Color.web("#ff2370"));
+				} else if ("Placeholder".equals("orange")) {
+					color.setFill(Color.web("#ff8600"));
+				} else if ("Placeholder".equals("red")) {
+					color.setFill(Color.RED);
+				} else if ("Placeholder".equals("yellow")) {
+					color.setFill(Color.web("#ffe400"));
+				} else if ("Placeholder".equals("green")) {
+					color.setFill(Color.web("#04bf19"));
+				} else if ("Placeholder".equals("blue")) {
+					color.setFill(Color.web("#1306bd"));
+				} else {
+					color = null;
+				}
+				Label streetName = new Label(); // TODO DATA insert
+				HBox ownerName = new HBox(10);
+				Label oName = new Label("Besitzer: ");
+				Label owName = new Label(); // TODO DATA insert
+				ownerName.getChildren().addAll(oName, owName);
+				HBox costBox = new HBox(10);
+				Label cost = new Label("Kosten: ");
+				Label costs = new Label(); // TODO DATA insert
+				costBox.getChildren().addAll(cost, costs);
+				Button pay = new Button("Bezahlen");
+				pay.setOnAction(e -> {
+					MonopolyClient.payFee();
+				});
+				layout = new VBox(10);
+				if (color != null) {
+					layout.getChildren().add(color);
+				}
+				layout.setPadding(new Insets(10, 10, 10, 10));
+				layout.getChildren().addAll(streetName, ownerName, costBox, pay);
+				layout.setAlignment(Pos.CENTER);
+				Scene scene = new Scene(layout);
+				roundWindow.setScene(scene);
+			}
+		}
+	}
+
+	private void auction() {
+		HBox value = new HBox(10);
+		Label crrntVal = new Label("Aktuelles Gebot:");
+		Label val = new Label();
+		value.getChildren().addAll(crrntVal, val);
+		HBox highest = new HBox(10);
+		Label highG = new Label("Höchstbietender: ");
+		Label highestG = new Label();
+		highest.getChildren().addAll(highG, highestG);
+		TextField field = new TextField();
+		HBox actions = new HBox(10);
+		Button finish = new Button("Fertig");
+		Button bidBttn = new Button("Bieten");
+		actions.getChildren().addAll(bidBttn, finish);
+		layout = new VBox(10);
+		bidBttn.setOnAction(e -> {
+			try {
+				MonopolyClient.bid(Integer.parseInt(field.getText()));
+			} catch (NumberFormatException err) {
+				Label error = new Label("Bitte eine gültige Zahl eingeben!");
+				error.setTextFill(Color.RED);
+				field.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
+				layout.getChildren().add(3, error);
+			}
+		});
+		layout.getChildren().addAll(value, highest, field, actions);
+		layout.setPadding(new Insets(10, 10, 10, 10));
+		layout.setAlignment(Pos.CENTER);
+		Scene scene = new Scene(layout);
+		roundWindow.setScene(scene);
+	}
+
+	public void addNewBid(int amount, String name) {
+		Label val = (Label) ((HBox) layout.getChildren().get(0)).getChildren().get(1);
+		Label bName = (Label) ((HBox) layout.getChildren().get(1)).getChildren().get(1);
+		val.setText("" + amount);
+		bName.setText(name);
 	}
 
 	public void menuClose(ActionEvent event) throws IOException {
@@ -300,8 +488,7 @@ public class GameBoardController implements Initializable {
 		roundWindow.setMinHeight(500);
 	}
 
-	public void refreshTurn(Player p) {
-		turnName.setText(p.getName());
-		streetIDs[p.getPositionIndex()].setStyle("-fx-border-color: red;");
+	public void refreshTurnName(String name) {
+		turnName.setText(name);
 	}
 }
