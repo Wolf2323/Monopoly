@@ -187,15 +187,18 @@ public class GameBoardController implements Initializable {
 	}
 
 	public void setDices(int dice1, int dice2) {
-		VBox root = (VBox)roundWindow.getScene().getRoot();
-		Label diceNumber1 = (Label) ((VBox)((HBox)root.getChildren().get(0)).getChildren().get(0)).getChildren().get(1);
-		Label diceNumber2 = (Label) ((VBox)((HBox)root.getChildren().get(0)).getChildren().get(1)).getChildren().get(1);
+		VBox root = (VBox) roundWindow.getScene().getRoot();
+		Label diceNumber1 = (Label) ((VBox) ((HBox) root.getChildren().get(0)).getChildren().get(0)).getChildren()
+				.get(1);
+		Label diceNumber2 = (Label) ((VBox) ((HBox) root.getChildren().get(0)).getChildren().get(1)).getChildren()
+				.get(1);
 		Button continueBttn = (Button) (root.getChildren().get(1));
 		diceNumber1.setText("" + dice1);
 		diceNumber2.setText("" + dice2);
 		continueBttn.setText("Laufen");
-		continueBttn.setOnAction(e -> { //TODO show next Screen with street info
-			
+		continueBttn.setOnAction(e -> { // TODO show next Screen with street
+										// info
+
 		});
 	}
 
@@ -214,9 +217,11 @@ public class GameBoardController implements Initializable {
 	public void menuMainMenu(ActionEvent event) throws IOException {
 		goToMainMenu();
 	}
+
 	public void showTurnPopup(String name) {
 		// show who is on the move
 	}
+
 	public void goToMainMenu() throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("mainMenu.fxml"));
