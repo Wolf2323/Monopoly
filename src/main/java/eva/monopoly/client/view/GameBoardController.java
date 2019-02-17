@@ -134,6 +134,7 @@ public class GameBoardController implements Initializable {
 	VBox id38;
 	@FXML
 	VBox id39;
+	private boolean doublets;
 	private VBox[] streetIDs;
 	private String uName;
 	private Stage roundWindow;
@@ -240,6 +241,7 @@ public class GameBoardController implements Initializable {
 	}
 
 	public void setDices(int dice, boolean doublets) {
+		this.doublets = doublets;
 		VBox root = (VBox) roundWindow.getScene().getRoot();
 		Label diceNumber1 = (Label) ((VBox) ((HBox) root.getChildren().get(0)).getChildren().get(0)).getChildren()
 				.get(1);
@@ -256,6 +258,21 @@ public class GameBoardController implements Initializable {
 		continueBttn.setOnAction(e -> {
 			MonopolyClient.getStreetData();
 		});
+	}
+
+	public void jail() {
+		Label prisonTxt = new Label("DU KOMMST INS GEFÄNGNIS!");
+		Button closeBttn = new Button("Runde beenden");
+		closeBttn.setOnAction(e -> {
+			roundWindow.close();
+			MonopolyClient.roundFinished();
+		});
+		layout = new VBox(10);
+		layout.setPadding(new Insets(10, 10, 10, 10));
+		layout.getChildren().addAll();
+		layout.setAlignment(Pos.CENTER);
+		Scene scene = new Scene(layout);
+		roundWindow.setScene(scene);
 	}
 
 	public void showMoveData(Street street, OptionalInt optionalInt, int i) { // show
@@ -338,10 +355,11 @@ public class GameBoardController implements Initializable {
 				Button ignore = new Button("Ignorieren");
 				buy.setOnAction(e -> {
 					MonopolyClient.buyStreet(true); // TODO correct Parameter
+					
 				});
 				ignore.setOnAction(e -> {
 					MonopolyClient.buyStreet(false);
-					auction();
+					continueRound();
 				});
 				actions.getChildren().addAll(buy, ignore);
 				layout.setPadding(new Insets(10, 10, 10, 10));
@@ -468,6 +486,14 @@ public class GameBoardController implements Initializable {
 		Stage window = (Stage) menuBar.getScene().getWindow();
 		window.setScene(mainMenu);
 		window.show();
+	}
+	private void continueRound() {
+		if (doublets) {
+			startRound();
+		} else {
+			roundWindow.close();
+			MonopolyClient.roundFinished();
+		}
 	}
 
 	@Override

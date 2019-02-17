@@ -77,11 +77,15 @@ public class MonopolyClient extends Application {
 			switch (state.getState()) {
 			case CONNECTED:
 				LOG.info("Der Spieler " + state.getName() + " hat sich zum Spiel verbunden");
-				MainMenuController.getInstance().addPlayer(state.getName());
+				if (MainMenuController.getInstance().isGameNotStarted()) {
+					MainMenuController.getInstance().addPlayer(state.getName());
+				}
 				return;
 			case DISCONNECTED:
 				LOG.info("Der Spieler " + state.getName() + " hat die Verbindung getrennt");
-				MainMenuController.getInstance().removePlayer(state.getName());
+				if (MainMenuController.getInstance().isGameNotStarted()) {
+					MainMenuController.getInstance().removePlayer(state.getName());
+				}
 				if (state.getName().equals(name)) {
 					Platform.runLater(() -> {
 						MainMenuController.getInstance().connectionRefused();
@@ -91,7 +95,9 @@ public class MonopolyClient extends Application {
 				return;
 			case RECONNECTED:
 				LOG.info("Der Spieler " + state.getName() + " hat die Verbindung wiederhergestellt");
-				MainMenuController.getInstance().addPlayer(state.getName());
+				if (MainMenuController.getInstance().isGameNotStarted()) {
+					MainMenuController.getInstance().addPlayer(state.getName());
+				}
 				if (state.getName().equals(name)) {
 					Platform.runLater(() -> {
 						MainMenuController.getInstance().gameStart();
@@ -100,7 +106,9 @@ public class MonopolyClient extends Application {
 				return;
 			case LOSTCONNECTION:
 				LOG.info("Der Spieler " + state.getName() + " hat die Verbindung verloren");
-				MainMenuController.getInstance().removePlayer(state.getName());
+				if (MainMenuController.getInstance().isGameNotStarted()) {
+					MainMenuController.getInstance().removePlayer(state.getName());
+				}
 				return;
 			}
 		});
@@ -206,7 +214,7 @@ public class MonopolyClient extends Application {
 		});
 		client.getSocketConnector().registerHandle(RollDice.class, (con, state) -> {
 			if (state.isDoubletsJail()) {
-				
+				GameBoardController.getInstance().jail();
 			} else {
 				Platform.runLater(() -> {
 					GameBoardController.getInstance().setDices(state.getAmount(), state.isDoublets());
@@ -216,7 +224,8 @@ public class MonopolyClient extends Application {
 		client.getSocketConnector().registerHandle(StreetEntered.class, (con, state) -> {
 			if (state.getName().equals(name)) {
 				Platform.runLater(() -> {
-					GameBoardController.getInstance().showMoveData(state.getStreet(), state.getMoneyAmount(), state.getNewMoney());
+					GameBoardController.getInstance().showMoveData(state.getStreet(), state.getMoneyAmount(),
+							state.getNewMoney());
 				});
 				toInterrupt = Thread.currentThread();
 				try {
@@ -296,15 +305,21 @@ public class MonopolyClient extends Application {
 	}
 
 	public static void buyStreet(boolean buy) {
-		client.getSocketConnector().sendMessage(new BuyStreet(name, buy)); 
+		client.getSocketConnector().sendMessage(new BuyStreet(name, buy));
 	}
 
 	public static void bid(int amount) {
-		//TODO client.getSocketConnector().sendMessage(new Bid(name, amount)); // TODO create ExchangeMEssage
+		// TODO client.getSocketConnector().sendMessage(new Bid(name, amount));
+		// // TODO create ExchangeMEssage
 	}
 
 	public static void payFee() {
-		//TODO client.getSocketConnector().sendMessage(new PayFee(name)); // TODO create ExchangeMessage
+		// TODO client.getSocketConnector().sendMessage(new PayFee(name)); //
+		// TODO create ExchangeMessage
+	}
+
+	public static void roundFinished() {
+		client.getSocketConnector().sendMessage(new StartStopRound(name));
 	}
 
 }

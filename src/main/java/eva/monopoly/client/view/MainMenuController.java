@@ -48,7 +48,7 @@ public class MainMenuController implements Initializable {
 	Label uNameLabel;
 	@FXML
 	MenuBar menuBar;
-	private boolean disconnect = true;
+	private boolean gameNotStarted = true;
 	private String port;
 	private String ip;
 	private VBox layout;
@@ -254,7 +254,7 @@ public class MainMenuController implements Initializable {
 		newWindow.setScene(scene);
 		newWindow.setOnCloseRequest(e -> {
 			tableItems.clear();
-			if (disconnect) {
+			if (gameNotStarted) {
 				MonopolyClient.disconnect();
 			}
 		});
@@ -396,7 +396,7 @@ public class MainMenuController implements Initializable {
 	}
 
 	public void gameStart() {
-		disconnect = false;
+		gameNotStarted = false;
 		newWindow.close();
 		Parent gameBoardParent;
 		try {
@@ -446,6 +446,9 @@ public class MainMenuController implements Initializable {
 
 	public void connectionRefused() {
 		errorWindow(this.ip, this.port, "gameInProgress");
+	}
+	public boolean isGameNotStarted() {
+		return gameNotStarted;
 	}
 
 }
