@@ -249,7 +249,6 @@ public class MainMenuController implements Initializable {
 		newWindow.setScene(scene);
 		newWindow.setOnCloseRequest(e -> {
 			tableItems.clear();
-			MonopolyClient.disconnect();
 		});
 	}
 
