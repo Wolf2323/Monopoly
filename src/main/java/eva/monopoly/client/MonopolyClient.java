@@ -18,6 +18,9 @@ import eva.monopoly.api.network.messages.PawnChanged;
 import eva.monopoly.api.network.messages.PlayerStatusChanged;
 import eva.monopoly.api.network.messages.PlayerStatusChanged.ConnectionState;
 import eva.monopoly.api.network.messages.RollDice;
+import eva.monopoly.api.network.messages.StartStopRound;
+import eva.monopoly.api.network.messages.Unjail;
+import eva.monopoly.api.network.messages.Unjail.UnjailReason;
 import eva.monopoly.client.view.GameBoardController;
 import eva.monopoly.client.view.MainMenuController;
 import javafx.application.Application;
@@ -179,7 +182,21 @@ public class MonopolyClient extends Application {
 			}
 		});
 		client.getSocketConnector().registerHandle(GetPlayers.class, (con, state) -> {
-			GameBoardController.getInstance().initializeGame(state.getPlayers());
+			Platform.runLater(() -> {
+				GameBoardController.getInstance().initializeGame(state.getPlayers());
+			});
+		});
+		client.getSocketConnector().registerHandle(StartStopRound.class, (con, state) -> {
+			if (state.getName().equals(name)) {
+				Platform.runLater(() -> {
+					GameBoardController.getInstance().startRound();
+				});
+			} else {
+				Platform.runLater(() -> {
+					GameBoardController.getInstance().refreshTurn(state);
+					LOG.info("Der Spieler " + state.getName() + "ist am Zug");
+				});
+			}
 		});
 	}
 
@@ -234,6 +251,20 @@ public class MonopolyClient extends Application {
 		disconnect();
 		SocketConnector.shutdownThreadPools();
 		Platform.exit();
+	}
+
+	public static void unjail(String type) {
+		if (type.equals("money")) {
+			client.getSocketConnector().sendMessage(new Unjail(name, UnjailReason.PAYED));
+		} else if (type.equals("card")) {
+			client.getSocketConnector().sendMessage(new Unjail(name, UnjailReason.CARD));
+		} else if (type.equals("doublets")) {
+			client.getSocketConnector().sendMessage(new Unjail(name, UnjailReason.DOUBLETS));
+		}
+	}
+
+	public static void getStreetData() {
+		client.getSocketConnector().sendMessage(new GetMoveData(name));		
 	}
 
 }

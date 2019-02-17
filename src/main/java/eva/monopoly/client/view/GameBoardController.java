@@ -135,6 +135,7 @@ public class GameBoardController implements Initializable {
 	private Stage roundWindow;
 	private VBox layout;
 	private List<Player> players;
+	private Player player;
 
 	private static GameBoardController instance;
 
@@ -175,33 +176,63 @@ public class GameBoardController implements Initializable {
 		 * or ignore if field is not occupied, give option to place house if
 		 * target field and corresponding street is owned by the player
 		 */
-		roundWindow = new Stage();
-		roundWindow.initModality(Modality.APPLICATION_MODAL);
-		roundWindow.setTitle("Find Game");
-		roundWindow.setMinWidth(400);
-		roundWindow.setMinHeight(500);
-		HBox dices = new HBox(10);
-		dices.setAlignment(Pos.CENTER);
-		VBox dice1 = new VBox(10);
-		VBox dice2 = new VBox(10);
-		Label header1 = new Label("Würfel 1");
-		Label header2 = new Label("Würfel 2");
-		Label diceNumber1 = new Label();
-		Label diceNumber2 = new Label();
-		dice1.getChildren().addAll(header1, diceNumber1);
-		dice2.getChildren().addAll(header2, diceNumber2);
-		dices.getChildren().addAll(dice1, dice2);
-		Button rollDice = new Button("Würfeln");
-		rollDice.setOnAction(e -> { // send message to Server to roll Dice
-			MonopolyClient.rollDice();
-		});
-		layout = new VBox(10);
-		layout.setPadding(new Insets(10, 10, 10, 10));
-		layout.getChildren().addAll(dices, rollDice);
-		layout.setAlignment(Pos.CENTER);
-		Scene scene = new Scene(layout);
-		roundWindow.setScene(scene);
-		roundWindow.showAndWait();
+		if (player.isJailed()) { // give options to either pay 50, use card if
+									// in possession, roll dice 3 times
+			Label header = new Label("DU BIST IM GEFÄNGNIS!");
+			Button firstOpt = new Button("Bezahle M 50");
+			Button secondOpt = new Button("Gefängnis-frei Karte");
+			Button thirdOpt = new Button("Würfeln");
+			firstOpt.setOnAction(e -> {
+				MonopolyClient.unjail("money");
+			});
+			secondOpt.setOnAction(e -> {
+				MonopolyClient.unjail("card");
+			});
+			thirdOpt.setOnAction(e -> {
+				MonopolyClient.rollDice();
+			});
+			HBox dices = new HBox(10);
+			dices.setAlignment(Pos.CENTER);
+			VBox dice1 = new VBox(10);
+			VBox dice2 = new VBox(10);
+			Label header1 = new Label("Würfel 1");
+			Label header2 = new Label("Würfel 2");
+			Label diceNumber1 = new Label();
+			Label diceNumber2 = new Label();
+			dice1.getChildren().addAll(header1, diceNumber1);
+			dice2.getChildren().addAll(header2, diceNumber2);
+			dices.getChildren().addAll(dice1, dice2);
+			layout = new VBox(10);
+			layout.setPadding(new Insets(10, 10, 10, 10));
+			layout.getChildren().addAll();
+			layout.setAlignment(Pos.CENTER);
+			Scene scene = new Scene(layout);
+			roundWindow.setScene(scene);
+			roundWindow.showAndWait();
+		} else {
+			HBox dices = new HBox(10);
+			dices.setAlignment(Pos.CENTER);
+			VBox dice1 = new VBox(10);
+			VBox dice2 = new VBox(10);
+			Label header1 = new Label("Würfel 1");
+			Label header2 = new Label("Würfel 2");
+			Label diceNumber1 = new Label();
+			Label diceNumber2 = new Label();
+			dice1.getChildren().addAll(header1, diceNumber1);
+			dice2.getChildren().addAll(header2, diceNumber2);
+			dices.getChildren().addAll(dice1, dice2);
+			Button rollDice = new Button("Würfeln");
+			rollDice.setOnAction(e -> { // send message to Server to roll Dice
+				MonopolyClient.rollDice();
+			});
+			layout = new VBox(10);
+			layout.setPadding(new Insets(10, 10, 10, 10));
+			layout.getChildren().addAll(dices, rollDice);
+			layout.setAlignment(Pos.CENTER);
+			Scene scene = new Scene(layout);
+			roundWindow.setScene(scene);
+			roundWindow.showAndWait();
+		}
 	}
 
 	public void setDices(int dice1, int dice2) {
@@ -214,9 +245,8 @@ public class GameBoardController implements Initializable {
 		diceNumber1.setText("" + dice1);
 		diceNumber2.setText("" + dice2);
 		continueBttn.setText("Laufen");
-		continueBttn.setOnAction(e -> { // TODO show next Screen with street
-										// info
-
+		continueBttn.setOnAction(e -> { 
+			MonopolyClient.getStreetData();
 		});
 	}
 
@@ -260,8 +290,18 @@ public class GameBoardController implements Initializable {
 			if (p.getName().equals(uName)) {
 				streetIDs[p.getPositionIndex()].setStyle("-fx-border-color: green;");
 				money.setText("" + p.getMoney());
+				player = p;
 			}
-			
 		}
+		roundWindow = new Stage();
+		roundWindow.initModality(Modality.APPLICATION_MODAL);
+		roundWindow.setTitle("Rundenoptionen");
+		roundWindow.setMinWidth(400);
+		roundWindow.setMinHeight(500);
+	}
+
+	public void refreshTurn(Player p) {
+		turnName.setText(p.getName());
+		streetIDs[p.getPositionIndex()].setStyle("-fx-border-color: red;");
 	}
 }
