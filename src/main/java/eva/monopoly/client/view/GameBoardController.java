@@ -134,9 +134,7 @@ public class GameBoardController implements Initializable {
 	VBox id38;
 	@FXML
 	VBox id39;
-	private VBox[] streetIDs = { id0, id1, id2, id3, id4, id5, id6, id7, id8, id9, id10, id11, id12, id13, id14, id15,
-			id16, id17, id18, id19, id20, id21, id22, id23, id24, id25, id26, id27, id28, id29, id30, id31, id32, id33,
-			id34, id35, id36, id37, id38, id39 };
+	private VBox[] streetIDs;
 	private String uName;
 	private Stage roundWindow;
 	private VBox layout;
@@ -220,8 +218,8 @@ public class GameBoardController implements Initializable {
 			dices.setAlignment(Pos.CENTER);
 			VBox dice1 = new VBox(10);
 			VBox dice2 = new VBox(10);
-			Label header1 = new Label("Würfel 1");
-			Label header2 = new Label("Würfel 2");
+			Label header1 = new Label("Augenzahl");
+			Label header2 = new Label("Pasch");
 			Label diceNumber1 = new Label();
 			Label diceNumber2 = new Label();
 			dice1.getChildren().addAll(header1, diceNumber1);
@@ -241,15 +239,19 @@ public class GameBoardController implements Initializable {
 		}
 	}
 
-	public void setDices(int dice1, int dice2) {
+	public void setDices(int dice, boolean doublets) {
 		VBox root = (VBox) roundWindow.getScene().getRoot();
 		Label diceNumber1 = (Label) ((VBox) ((HBox) root.getChildren().get(0)).getChildren().get(0)).getChildren()
 				.get(1);
 		Label diceNumber2 = (Label) ((VBox) ((HBox) root.getChildren().get(0)).getChildren().get(1)).getChildren()
 				.get(1);
 		Button continueBttn = (Button) (root.getChildren().get(1));
-		diceNumber1.setText("" + dice1);
-		diceNumber2.setText("" + dice2);
+		diceNumber1.setText("" + dice);
+		if (doublets) {
+			diceNumber2.setText("Ja");
+		} else {
+			diceNumber2.setText("Nein");
+		}
 		continueBttn.setText("Laufen");
 		continueBttn.setOnAction(e -> {
 			MonopolyClient.getStreetData();
@@ -470,6 +472,9 @@ public class GameBoardController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		streetIDs = new VBox[] { id0, id1, id2, id3, id4, id5, id6, id7, id8, id9, id10, id11, id12, id13, id14, id15,
+				id16, id17, id18, id19, id20, id21, id22, id23, id24, id25, id26, id27, id28, id29, id30, id31, id32,
+				id33, id34, id35, id36, id37, id38, id39 };
 	}
 
 	public void initializeGame(List<Player> players) {

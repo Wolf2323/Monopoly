@@ -193,6 +193,7 @@ public class MonopolyClient extends Application {
 			if (state.getName().equals(name)) {
 				Platform.runLater(() -> {
 					GameBoardController.getInstance().startRound();
+					GameBoardController.getInstance().refreshTurnName(state.getName());
 				});
 				toInterrupt = Thread.currentThread();
 				try {
@@ -200,10 +201,15 @@ public class MonopolyClient extends Application {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+			}
+			LOG.info("Der Spieler " + state.getName() + " ist am Zug");
+		});
+		client.getSocketConnector().registerHandle(RollDice.class, (con, state) -> {
+			if (state.isDoubletsJail()) {
+				
 			} else {
 				Platform.runLater(() -> {
-					GameBoardController.getInstance().refreshTurnName(state.getName());
-					LOG.info("Der Spieler " + state.getName() + " ist am Zug");
+					GameBoardController.getInstance().setDices(state.getAmount(), state.isDoublets());
 				});
 			}
 		});
