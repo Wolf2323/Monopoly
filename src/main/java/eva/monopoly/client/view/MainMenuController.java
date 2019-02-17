@@ -104,6 +104,15 @@ public class MainMenuController implements Initializable {
 				}
 			}
 		});
+		ipField.setOnKeyPressed(e -> { // Enter Button confirms input
+			if (e.getCode() == KeyCode.ENTER) {
+				try {
+					goToGameLobby(ipField.getText(), portField.getText(), event);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
 		ipAndPort.getChildren().addAll(ipField, separator, portField);
 		Button okBttn = new Button("Continue");
 		Button cancelBttn = new Button("Cancel");
@@ -239,6 +248,7 @@ public class MainMenuController implements Initializable {
 		layout.setAlignment(Pos.CENTER);
 		Scene scene = new Scene(layout);
 		newWindow.setScene(scene);
+		newWindow.setOnCloseRequest(e -> MonopolyClient.disconnect());
 	}
 
 	// show errors when somethings wrong in the connection screen

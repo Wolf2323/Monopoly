@@ -29,6 +29,7 @@ public class MonopolyClient extends Application {
 	public final static Logger LOG = LoggerFactory.getLogger(MonopolyClient.class);
 	private static Client client;
 	private static String name;
+	private static boolean connected = false;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -60,6 +61,7 @@ public class MonopolyClient extends Application {
 		registerHandler();
 
 		client.getSocketConnector().sendMessage(new PlayerStatusChanged(name, ConnectionState.CONNECTED));
+		connected = true;
 	}
 
 	private static void registerHandler() {
@@ -153,16 +155,16 @@ public class MonopolyClient extends Application {
 				return;
 			case FINISHED:
 				LOG.info("Das Spiel ist beendet");
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							try {
-								GameBoardController.getInstance().goToMainMenu();
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							GameBoardController.getInstance().goToMainMenu();
+						} catch (IOException e) {
+							e.printStackTrace();
 						}
-					});
+					}
+				});
 				return;
 			}
 		});
@@ -215,13 +217,23 @@ public class MonopolyClient extends Application {
 	}
 
 	public static void disconnect() {
-		try {
-			client.getSocketConnector().sendMessage(new PlayerStatusChanged(name, ConnectionState.DISCONNECTED));
-			client.getSocketConnector().closeConnection();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (connected) {
+			try {
+				client.getSocketConnector().sendMessage(new PlayerStatusChanged(name, ConnectionState.DISCONNECTED));
+				client.getSocketConnector().closeConnection();
+				connected = false;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+	}
+
+	@Override
+	public void stop() {
+		System.out.println("stop");
+		disconnect();
+		Platform.exit();
 	}
 
 }
