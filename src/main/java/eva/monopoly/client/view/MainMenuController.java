@@ -48,6 +48,7 @@ public class MainMenuController implements Initializable {
 	Label uNameLabel;
 	@FXML
 	MenuBar menuBar;
+	private boolean disconnect = true;
 	private String port;
 	private String ip;
 	private VBox layout;
@@ -249,6 +250,9 @@ public class MainMenuController implements Initializable {
 		newWindow.setScene(scene);
 		newWindow.setOnCloseRequest(e -> {
 			tableItems.clear();
+			if (disconnect) {
+				MonopolyClient.disconnect();
+			}
 		});
 	}
 
@@ -384,6 +388,7 @@ public class MainMenuController implements Initializable {
 	}
 
 	public void gameStart() {
+		disconnect = false;
 		newWindow.close();
 		Parent gameBoardParent;
 		try {
