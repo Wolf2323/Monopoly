@@ -312,6 +312,7 @@ public class MainMenuController implements Initializable {
 	}
 
 	public void menuClose(ActionEvent event) throws IOException {
+		MonopolyClient.disconnect();
 		Platform.exit();
 	}
 

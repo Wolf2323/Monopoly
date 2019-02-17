@@ -218,14 +218,9 @@ public class MonopolyClient extends Application {
 
 	public static void disconnect() {
 		if (connected) {
-			try {
-				client.getSocketConnector().sendMessage(new PlayerStatusChanged(name, ConnectionState.DISCONNECTED));
-				client.getSocketConnector().closeConnection();
-				connected = false;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			client.getSocketConnector().sendMessage(new PlayerStatusChanged(name, ConnectionState.DISCONNECTED));
+			client.closeConnection();
+			connected = false;
 		}
 	}
 
