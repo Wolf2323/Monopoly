@@ -1,7 +1,5 @@
 package eva.monopoly.client.utils;
 
-import eva.monopoly.api.game.player.Player.Pawn;
-
 public class PlayerLobby {
 	private String name;
 	private String pawn;

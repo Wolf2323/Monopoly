@@ -68,7 +68,8 @@
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="BADSTRASSE" textAlignment="CENTER" wrappingWidth="113.0">
                      <font>
                         <Font name="Arial" size="13.0" />
-                     </font></Text>
+                     </font>
+                  </Text>
                   <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="M 60">
                      <font>
                         <Font name="Arial" size="12.0" />
@@ -110,7 +111,7 @@
             </VBox>
             <VBox id="gamefield" fx:id="id2" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="8" GridPane.rowIndex="10">
                <children>
-                  <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="GEMEINSCHAFTSFELD" textAlignment="CENTER" wrappingWidth="113.0">
+                  <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="GEMEINSCHAFTSFELD 1" textAlignment="CENTER" wrappingWidth="113.0">
                      <font>
                         <Font name="Arial" size="13.0" />
                      </font>
@@ -168,7 +169,7 @@
                </children></VBox>
             <VBox id="gamefield" fx:id="id7" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="10">
                <children>
-                  <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="EREIGNISFELD" textAlignment="CENTER" wrappingWidth="113.0">
+                  <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="EREIGNISFELD 1" textAlignment="CENTER" wrappingWidth="113.0">
                      <font>
                         <Font name="Arial" size="13.0" />
                      </font>
@@ -309,7 +310,7 @@
                </children></VBox>
             <VBox id="gamefield" fx:id="id17" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="3">
                <children>
-                  <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="GEMEINSCHAFTSFELD" textAlignment="CENTER" wrappingWidth="113.0">
+                  <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="GEMEINSCHAFTSFELD 2" textAlignment="CENTER" wrappingWidth="113.0">
                      <font>
                         <Font name="Arial" size="13.0" />
                      </font>
@@ -377,7 +378,7 @@
                </children></VBox>
             <VBox id="gamefield" fx:id="id22" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
                <children>
-                  <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="EREIGNISFELD" textAlignment="CENTER" wrappingWidth="113.0">
+                  <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="EREIGNISFELD 2" textAlignment="CENTER" wrappingWidth="113.0">
                      <font>
                         <Font name="Arial" size="13.0" />
                      </font>
@@ -532,7 +533,7 @@
                </children></VBox>
             <VBox id="gamefield" fx:id="id33" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="3">
                <children>
-                  <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="GEMEINSCHAFTSFELD" textAlignment="CENTER" wrappingWidth="113.0">
+                  <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="GEMEINSCHAFTSFELD 3" textAlignment="CENTER" wrappingWidth="113.0">
                      <font>
                         <Font name="Arial" size="13.0" />
                      </font>
@@ -577,7 +578,7 @@
                </children></VBox>
             <VBox id="gamefield" fx:id="id36" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="10" GridPane.rowIndex="6">
                <children>
-                  <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="EREIGNISFELD" textAlignment="CENTER" wrappingWidth="113.0">
+                  <Text id="gamefield" strokeType="OUTSIDE" strokeWidth="0.0" text="EREIGNISFELD 3" textAlignment="CENTER" wrappingWidth="113.0">
                      <font>
                         <Font name="Arial" size="13.0" />
                      </font>
@@ -650,6 +651,94 @@
                         <Font size="13.0" />
                      </font>
                   </Text>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
+               <children>
+                  <ImageView fx:id="player1Icon" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="2">
+               <children>
+                  <ImageView fx:id="player2Icon" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="3">
+               <children>
+                  <ImageView fx:id="player3Icon" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="4">
+               <children>
+                  <ImageView fx:id="player4Icon" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="6">
+               <children>
+                  <ImageView fx:id="player5Icon" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="7">
+               <children>
+                  <ImageView fx:id="player6Icon" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="8">
+               <children>
+                  <ImageView fx:id="player7Icon" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="9">
+               <children>
+                  <ImageView fx:id="player8Icon" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="5" GridPane.rowIndex="1">
+               <children>
+                  <Label fx:id="player1Name" text="name" />
+                  <Label fx:id="player1Pos" text="position" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="5" GridPane.rowIndex="2">
+               <children>
+                  <Label fx:id="player2Name" text="name" />
+                  <Label fx:id="player2Pos" text="position" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="5" GridPane.rowIndex="3">
+               <children>
+                  <Label fx:id="player3Name" text="name" />
+                  <Label fx:id="player3Pos" text="position" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="5" GridPane.rowIndex="4">
+               <children>
+                  <Label fx:id="player4Name" text="name" />
+                  <Label fx:id="player4Pos" text="position" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="5" GridPane.rowIndex="6">
+               <children>
+                  <Label fx:id="player5Name" text="name" />
+                  <Label fx:id="player5Pos" text="position" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="5" GridPane.rowIndex="7">
+               <children>
+                  <Label fx:id="player6Name" text="name" />
+                  <Label fx:id="player6Pos" text="position" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="5" GridPane.rowIndex="8">
+               <children>
+                  <Label fx:id="player7Name" text="name" />
+                  <Label fx:id="player7Pos" text="position" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="5" GridPane.rowIndex="9">
+               <children>
+                  <Label fx:id="player8Name" text="name" />
+                  <Label fx:id="player8Pos" text="position" />
                </children>
             </VBox>
          </children>

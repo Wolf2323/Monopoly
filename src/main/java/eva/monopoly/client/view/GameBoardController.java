@@ -1,7 +1,9 @@
 package eva.monopoly.client.view;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import eva.monopoly.api.game.player.Player;
@@ -11,6 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -20,7 +23,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -119,10 +128,13 @@ public class GameBoardController implements Initializable {
 	VBox id38;
 	@FXML
 	VBox id39;
-
+	private VBox[] streetIDs = { id0, id1, id2, id3, id4, id5, id6, id7, id8, id9, id10, id11, id12, id13, id14, id15,
+			id16, id17, id18, id19, id20, id21, id22, id23, id24, id25, id26, id27, id28, id29, id30, id31, id32, id33,
+			id34, id35, id36, id37, id38, id39 };
 	private String uName;
 	private Stage roundWindow;
 	private VBox layout;
+	private List<Player> players;
 
 	private static GameBoardController instance;
 
@@ -150,6 +162,10 @@ public class GameBoardController implements Initializable {
 
 	public void showStreets() {
 		// get Streets from Player and show it in an alert window
+	}
+
+	public void showPlayers() {
+
 	}
 
 	public void startRound() {
@@ -236,5 +252,16 @@ public class GameBoardController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+	}
+
+	public void initializeGame(List<Player> players) {
+		this.players = players;
+		for (Player p : players) {
+			if (p.getName().equals(uName)) {
+				streetIDs[p.getPositionIndex()].setStyle("-fx-border-color: green;");
+				money.setText("" + p.getMoney());
+			}
+			
+		}
 	}
 }

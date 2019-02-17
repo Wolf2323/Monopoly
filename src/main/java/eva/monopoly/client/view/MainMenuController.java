@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
-import eva.monopoly.api.game.player.Player;
 import eva.monopoly.api.game.player.Player.Pawn;
 import eva.monopoly.api.network.api.SocketConnector;
 import eva.monopoly.client.MonopolyClient;
@@ -145,6 +144,7 @@ public class MainMenuController implements Initializable {
 	}
 
 	// try to connect to Server, show Pre-Game Lobby
+	@SuppressWarnings("unchecked")
 	private void goToGameLobby(String ip, String port, ActionEvent event) throws IOException {
 		// TODO entferene HACK
 		this.ip = ip;
@@ -202,21 +202,17 @@ public class MainMenuController implements Initializable {
 				// TODO entferne if Abfragen
 
 				/*
-				 * if (pawnSelection.equalsIgnoreCase("TOPHAT")) {
-				 * changePawn(uName, Pawn.TOPHAT); } else if
-				 * (pawnSelection.equalsIgnoreCase("THIMBLE")) {
+				 * if (pawnSelection.equalsIgnoreCase("TOPHAT")) { changePawn(uName,
+				 * Pawn.TOPHAT); } else if (pawnSelection.equalsIgnoreCase("THIMBLE")) {
 				 * changePawn(uName, Pawn.THIMBLE); } else if
-				 * (pawnSelection.equalsIgnoreCase("IRON")) { changePawn(uName,
-				 * Pawn.IRON); } else if
-				 * (pawnSelection.equalsIgnoreCase("SHOE")) { changePawn(uName,
-				 * Pawn.SHOE); } else if
-				 * (pawnSelection.equalsIgnoreCase("BATTLESHIP")) {
+				 * (pawnSelection.equalsIgnoreCase("IRON")) { changePawn(uName, Pawn.IRON); }
+				 * else if (pawnSelection.equalsIgnoreCase("SHOE")) { changePawn(uName,
+				 * Pawn.SHOE); } else if (pawnSelection.equalsIgnoreCase("BATTLESHIP")) {
 				 * changePawn(uName, Pawn.BATTLESHIP); } else if
-				 * (pawnSelection.equalsIgnoreCase("WHEELBARROW")) {
-				 * changePawn(uName, Pawn.WHEELBARROW); } else if
-				 * (pawnSelection.equalsIgnoreCase("DOG")) { changePawn(uName,
-				 * Pawn.DOG); } else if (pawnSelection.equalsIgnoreCase("CAR"))
-				 * { changePawn(uName, Pawn.CAR); }
+				 * (pawnSelection.equalsIgnoreCase("WHEELBARROW")) { changePawn(uName,
+				 * Pawn.WHEELBARROW); } else if (pawnSelection.equalsIgnoreCase("DOG")) {
+				 * changePawn(uName, Pawn.DOG); } else if
+				 * (pawnSelection.equalsIgnoreCase("CAR")) { changePawn(uName, Pawn.CAR); }
 				 */
 				MonopolyClient.notifyServerPawnChanged(pawnSelection);
 			}
@@ -365,6 +361,7 @@ public class MainMenuController implements Initializable {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public void readyNotPossible() {
 		if (!isPawnErrorWrongSelected) {
 			errorMessage.setTextFill(Color.RED);

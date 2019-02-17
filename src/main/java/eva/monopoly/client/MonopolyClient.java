@@ -13,6 +13,7 @@ import eva.monopoly.api.network.client.Client;
 import eva.monopoly.api.network.messages.GameStateChanged;
 import eva.monopoly.api.network.messages.GameStateChanged.GameState;
 import eva.monopoly.api.network.messages.GetConnectedClients;
+import eva.monopoly.api.network.messages.GetPlayers;
 import eva.monopoly.api.network.messages.PawnChanged;
 import eva.monopoly.api.network.messages.PlayerStatusChanged;
 import eva.monopoly.api.network.messages.PlayerStatusChanged.ConnectionState;
@@ -76,11 +77,8 @@ public class MonopolyClient extends Application {
 				LOG.info("Der Spieler " + state.getName() + " hat die Verbindung getrennt");
 				MainMenuController.getInstance().removePlayer(state.getName());
 				if (state.getName().equals(name)) {
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							MainMenuController.getInstance().connectionRefused();
-						}
+					Platform.runLater(() -> {
+						MainMenuController.getInstance().connectionRefused();
 					});
 					disconnect();
 				}
@@ -89,11 +87,8 @@ public class MonopolyClient extends Application {
 				LOG.info("Der Spieler " + state.getName() + " hat die Verbindung wiederhergestellt");
 				MainMenuController.getInstance().addPlayer(state.getName());
 				if (state.getName().equals(name)) {
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							MainMenuController.getInstance().gameStart();
-						}
+					Platform.runLater(() -> {
+						MainMenuController.getInstance().gameStart();
 					});
 				}
 				return;
@@ -143,45 +138,32 @@ public class MonopolyClient extends Application {
 			switch (state.getGameState()) {
 			case PREGAME:
 				LOG.info("Der Spieler " + state.getName() + " ist nicht bereit");
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						MainMenuController.getInstance().readyNotPossible();
-					}
+				Platform.runLater(() -> {
+					MainMenuController.getInstance().readyNotPossible();
 				});
 				return;
 			case READY:
 				LOG.info("Der Spieler " + state.getName() + " ist bereit");
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						MainMenuController.getInstance().changeReady(state.getName());
-					}
+				Platform.runLater(() -> {
+					MainMenuController.getInstance().changeReady(state.getName());
 				});
 
 				return;
 			case INGAME:
 				LOG.info("Das Spiel startet");
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						MainMenuController.getInstance().gameStart();
-					}
+				Platform.runLater(() -> {
+					MainMenuController.getInstance().gameStart();
 				});
 
-				;
 				return;
 			case FINISHED:
 				LOG.info("Das Spiel ist beendet");
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							GameBoardController.getInstance().goToMainMenu();
-							disconnect();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+				Platform.runLater(() -> {
+					try {
+						GameBoardController.getInstance().goToMainMenu();
+						disconnect();
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
 				});
 				return;
@@ -195,6 +177,9 @@ public class MonopolyClient extends Application {
 							entry.getValue().isReady());
 				}
 			}
+		});
+		client.getSocketConnector().registerHandle(GetPlayers.class, (con, state) -> {
+			GameBoardController.getInstance().initializeGame(state.getPlayers());
 		});
 	}
 
