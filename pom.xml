@@ -88,6 +88,8 @@
 				<directory></directory>
 				<excludes>
 					<exclude>pom.xml</exclude>
+					<exclude>bin</exclude>
+					<exclude>target</exclude>
 				</excludes>
 			</resource>
 		</resources>
