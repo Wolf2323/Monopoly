@@ -270,8 +270,7 @@ public class GameBoardController implements Initializable {
 						Label l4Rent = new Label("Vier Häuser:");
 						Label l5Rent = new Label("Hotel:");
 						Label l6Rent = new Label("Gebäudekosten:");
-						Label l7 = new Label("Häuser:");
-						Label l8 = new Label("Hotel:");
+						Label l7Rent = new Label("Häuser:");
 						Label s0Rent = new Label("" + buyNormStreet.getNohouse());
 						Label s1Rent = new Label("" + buyNormStreet.getOnehouse());
 						Label s2Rent = new Label("" + buyNormStreet.getTwohouses());
@@ -279,10 +278,11 @@ public class GameBoardController implements Initializable {
 						Label s4Rent = new Label("" + buyNormStreet.getFourhouses());
 						Label s5Rent = new Label("" + buyNormStreet.getHotel());
 						Label s6Rent = new Label("" + buyNormStreet.getHousecost());
-						Label s7 = new Label("" + buyNormStreet.getHouses());
-						Label s8 = new Label("" + buyNormStreet.getHotel());
-						lRents.getChildren().addAll(l0Rent, l1Rent, l2Rent, l3Rent, l4Rent, l5Rent, l6Rent);
-						sRents.getChildren().addAll(s0Rent, s1Rent, s2Rent, s3Rent, s4Rent, s5Rent, s6Rent);
+						String amount = buyNormStreet.getHouses() >= 5 ? "Hotel"
+								: String.valueOf(buyNormStreet.getHouses());
+						Label s7Rent = new Label("" + amount);
+						lRents.getChildren().addAll(l0Rent, l1Rent, l2Rent, l3Rent, l4Rent, l5Rent, l6Rent, l7Rent);
+						sRents.getChildren().addAll(s0Rent, s1Rent, s2Rent, s3Rent, s4Rent, s5Rent, s6Rent, s7Rent);
 						if (!foreignAccess) {
 							build.setDisable(false);
 							build.setOnAction(ee -> {
@@ -372,12 +372,18 @@ public class GameBoardController implements Initializable {
 			HBox playerInfo = new HBox(10);
 			Label name = new Label(p.getName());
 			Label pawn = new Label(MainMenuController.getInstance().pawnToString(p.getPawn()));
+			Label pos = new Label();
+			if (streetIDs[p.getPositionIndex()].getChildren().get(0) instanceof Label) {
+				pos.setText(((Label)streetIDs[p.getPositionIndex()].getChildren().get(0)).getText());
+			} else {
+				pos.setText(((Label)streetIDs[p.getPositionIndex()].getChildren().get(1)).getText());
+			}
 			Label lMoney = new Label("" + p.getMoney());
 			Button b = new Button("Strassen");
 			b.setOnAction(e -> {
 				displayStreets(p.getStreets(), false);
 			});
-			playerInfo.getChildren().addAll(name, pawn, lMoney, b);
+			playerInfo.getChildren().addAll(name, pawn, pos, lMoney, b);
 			pLayout.getChildren().add(playerInfo);
 		}
 		pLayout.setPadding(new Insets(10, 10, 10, 10));
@@ -389,9 +395,9 @@ public class GameBoardController implements Initializable {
 
 	public void startRound() {
 		/*
-		 * show Dice roll, show data of target field, give button options to buy
-		 * or ignore if field is not occupied, give option to place house if
-		 * target field and corresponding street is owned by the player
+		 * show Dice roll, show data of target field, give button options to buy or
+		 * ignore if field is not occupied, give option to place house if target field
+		 * and corresponding street is owned by the player
 		 */
 		roundWindow = new Stage();
 		roundWindow.initModality(Modality.APPLICATION_MODAL);
@@ -422,8 +428,8 @@ public class GameBoardController implements Initializable {
 			dices.setAlignment(Pos.CENTER);
 			VBox dice1 = new VBox(10);
 			VBox dice2 = new VBox(10);
-			Label header1 = new Label("Würfel 1");
-			Label header2 = new Label("Würfel 2");
+			Label header1 = new Label("Würfel");
+			Label header2 = new Label("Pasch");
 			Label diceNumber1 = new Label();
 			Label diceNumber2 = new Label();
 			dice1.getChildren().addAll(header1, diceNumber1);
@@ -431,7 +437,7 @@ public class GameBoardController implements Initializable {
 			dices.getChildren().addAll(dice1, dice2);
 			layout = new VBox(10);
 			layout.setPadding(new Insets(10, 10, 10, 10));
-			layout.getChildren().addAll();
+			layout.getChildren().addAll(header, firstOpt, secondOpt, thirdOpt, dices);
 			layout.setAlignment(Pos.CENTER);
 			Scene scene = new Scene(layout);
 			roundWindow.setScene(scene);
@@ -496,7 +502,7 @@ public class GameBoardController implements Initializable {
 		});
 		layout = new VBox(10);
 		layout.setPadding(new Insets(10, 10, 10, 10));
-		layout.getChildren().addAll();
+		layout.getChildren().addAll(prisonTxt, closeBttn);
 		layout.setAlignment(Pos.CENTER);
 		Scene scene = new Scene(layout);
 		roundWindow.setScene(scene);
@@ -786,9 +792,11 @@ public class GameBoardController implements Initializable {
 
 	private void continueRound() {
 		if (doublets) {
-			Scene reset = roundWindow.getScene();
-			reset = null;
-			startRound();
+			roundWindow.close();
+			Platform.runLater(() -> {
+				startRound();
+			});
+
 		} else {
 			roundWindow.close();
 			MonopolyClient.roundFinished();
@@ -859,7 +867,6 @@ public class GameBoardController implements Initializable {
 	}
 
 	public void showLos(Street street, Integer moneyAmount, int newMoney) {
-		NonBuyableMoneyStreet noBuyMonStreet = (NonBuyableMoneyStreet) street;
 		Stage losWindow = new Stage();
 		refreshMoney(newMoney);
 		losWindow.setTitle("LOS");

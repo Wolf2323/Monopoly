@@ -41,6 +41,7 @@ public class MonopolyClient extends Application {
 	private static Client client;
 	private static String name;
 	private static boolean connected = false;
+	private static boolean initialized = false;
 	private static Thread toInterrupt;
 
 	public static void main(String[] args) {
@@ -197,24 +198,33 @@ public class MonopolyClient extends Application {
 			}
 		});
 		client.getSocketConnector().registerHandle(GetPlayers.class, (con, state) -> {
-			Platform.runLater(() -> {
-				GameBoardController.getInstance().displayPlayers(state.getPlayers());
-			});
+			if (state.getName().equals(name)) {
+				Platform.runLater(() -> {
+					GameBoardController.getInstance().displayPlayers(state.getPlayers());
+				});
+			}
 		});
 		client.getSocketConnector().registerHandle(GetCards.class, (con, state) -> {
-			Platform.runLater(() -> {
-				GameBoardController.getInstance().displayCards(state.getCards());
-			});
+			if (state.getName().equals(name)) {
+				Platform.runLater(() -> {
+					GameBoardController.getInstance().displayCards(state.getCards());
+				});
+			}
 		});
 		client.getSocketConnector().registerHandle(GetStreets.class, (con, state) -> {
-			Platform.runLater(() -> {
-				GameBoardController.getInstance().displayStreets(state.getStreets(), true);
-			});
+			if (state.getName().equals(name)) {
+				Platform.runLater(() -> {
+					GameBoardController.getInstance().displayStreets(state.getStreets(), true);
+				});
+			}
 		});
 		client.getSocketConnector().registerHandle(StartStopRound.class, (con, state) -> {
 			if (state.getName().equals(name)) {
 				Platform.runLater(() -> {
-					GameBoardController.getInstance().initializeGame(state.getPlayer());
+					if (!initialized) {
+						GameBoardController.getInstance().initializeGame(state.getPlayer());
+						initialized = true;
+					}
 					GameBoardController.getInstance().refreshTurnName(state.getName());
 					GameBoardController.getInstance().startRound();
 				});
@@ -286,6 +296,13 @@ public class MonopolyClient extends Application {
 				if (GameBoardController.getInstance().getDoublets()) {
 					waitForInterrupt();
 				}
+			}
+		});
+		client.getSocketConnector().registerHandle(Unjail.class, (con, state) -> {
+			LOG.info("Der Spieler " + state.getName() + " hat das Gefängniss verlassen: " + state.getReason());
+			if (state.getName().equals(name)) {
+				Platform.runLater(() -> {
+				});
 			}
 		});
 	}
