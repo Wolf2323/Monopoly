@@ -11,6 +11,7 @@ import eva.monopoly.api.game.player.Player.Pawn;
 import eva.monopoly.api.network.api.SocketConnector;
 import eva.monopoly.api.network.client.Client;
 import eva.monopoly.api.network.messages.BuyStreet;
+import eva.monopoly.api.network.messages.CardPulled;
 import eva.monopoly.api.network.messages.GameStateChanged;
 import eva.monopoly.api.network.messages.GameStateChanged.GameState;
 import eva.monopoly.api.network.messages.GetConnectedClients;
@@ -20,6 +21,7 @@ import eva.monopoly.api.network.messages.PlayerStatusChanged;
 import eva.monopoly.api.network.messages.PlayerStatusChanged.ConnectionState;
 import eva.monopoly.api.network.messages.RollDice;
 import eva.monopoly.api.network.messages.StartStopRound;
+import eva.monopoly.api.network.messages.StreetBuyed;
 import eva.monopoly.api.network.messages.StreetEntered;
 import eva.monopoly.api.network.messages.Unjail;
 import eva.monopoly.api.network.messages.Unjail.UnjailReason;
@@ -203,22 +205,33 @@ public class MonopolyClient extends Application {
 					GameBoardController.getInstance().startRound();
 					GameBoardController.getInstance().refreshTurnName(state.getName());
 				});
-				toInterrupt = Thread.currentThread();
-				try {
-					toInterrupt.wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				waitForInterrupt();
 			}
+			Platform.runLater(() -> {
+				GameBoardController.getInstance().refreshTurnName(state.getName());
+			});
 			LOG.info("Der Spieler " + state.getName() + " ist am Zug");
 		});
 		client.getSocketConnector().registerHandle(RollDice.class, (con, state) -> {
-			if (state.isDoubletsJail()) {
-				GameBoardController.getInstance().jail();
+			if (state.getName().equals(name)) {
+				if (state.isDoubletsJail()) {
+					Platform.runLater(() -> {
+						GameBoardController.getInstance().jail();
+					});
+				} else {
+					Platform.runLater(() -> {
+						GameBoardController.getInstance().setDices(state.getAmount(), state.isDoublets());
+					});
+				}
+				waitForInterrupt();
 			} else {
-				Platform.runLater(() -> {
-					GameBoardController.getInstance().setDices(state.getAmount(), state.isDoublets());
-				});
+				if (state.isDoublets()) {
+					LOG.info("Der Spieler " + state.getName() + " hat " + state.getAmount()
+							+ " mit einem Pasch gewürfelt");
+				} else {
+					LOG.info("Der Spieler " + state.getName() + " hat " + state.getAmount()
+							+ " ohne einen Pasch gewürfelt");
+				}
 			}
 		});
 		client.getSocketConnector().registerHandle(StreetEntered.class, (con, state) -> {
@@ -227,14 +240,24 @@ public class MonopolyClient extends Application {
 					GameBoardController.getInstance().showMoveData(state.getStreet(), state.getMoneyAmount(),
 							state.getNewMoney());
 				});
-				toInterrupt = Thread.currentThread();
-				try {
-					toInterrupt.wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				waitForInterrupt();
 			} else {
-				LOG.info("Der Spieler " + state.getName() + " ist auf " + state.getStreet().getName() + " gelandet!");
+				LOG.info("Der Spieler " + state.getName() + " ist auf " + state.getStreet().getName() + " gelandet");
+			}
+		});
+		client.getSocketConnector().registerHandle(CardPulled.class, (con, state) -> {
+			if (state.getName().equals(name)) {
+				Platform.runLater(() -> {
+					GameBoardController.getInstance().showCard(state.getCard().getType(), state.getCard().getText(), state.getNewMoney());
+				});
+			}
+		});
+		client.getSocketConnector().registerHandle(StreetBuyed.class, (con, state) -> {
+			LOG.info("Der Spieler " + state.getName() + " hat die Strasse " + state.getStreet().getName() + " gekauft");
+			if (state.getName().equals(name)) {
+				Platform.runLater(() -> {
+					GameBoardController.getInstance().showBuyConfirmation(state.getStreet(), state.getNewMoney());
+				});
 			}
 		});
 	}
@@ -300,10 +323,6 @@ public class MonopolyClient extends Application {
 		}
 	}
 
-	public static void getStreetData() {
-		toInterrupt.interrupt();
-	}
-
 	public static void buyStreet(boolean buy) {
 		client.getSocketConnector().sendMessage(new BuyStreet(name, buy));
 	}
@@ -313,13 +332,21 @@ public class MonopolyClient extends Application {
 		// // TODO create ExchangeMEssage
 	}
 
-	public static void payFee() {
-		// TODO client.getSocketConnector().sendMessage(new PayFee(name)); //
-		// TODO create ExchangeMessage
-	}
-
 	public static void roundFinished() {
 		client.getSocketConnector().sendMessage(new StartStopRound(name));
 	}
 
+	public static void toInterruptInterrupt() {
+		toInterrupt.interrupt();
+	}
+
+	private static void waitForInterrupt() {
+		toInterrupt = Thread.currentThread();
+		try {
+			synchronized (toInterrupt) {
+				toInterrupt.wait();
+			}
+		} catch (InterruptedException e) {
+		}
+	}
 }

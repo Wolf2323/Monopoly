@@ -20,6 +20,11 @@
 			<version>1.0-Snapshot</version>
 		</dependency>
 		<dependency>
+			<groupId>eva.monopoly</groupId>
+			<artifactId>MonopolyServer</artifactId>
+			<version>1.0-Snapshot</version>
+		</dependency>
+		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.6</version>

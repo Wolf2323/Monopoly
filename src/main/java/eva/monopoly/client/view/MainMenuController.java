@@ -391,6 +391,10 @@ public class MainMenuController implements Initializable {
 				p.setReadyStatus();
 			}
 		}
+		if (name.equals(uName)) {
+			Button readyBttn = (Button)((VBox)((HBox)layout.getChildren().get(2)).getChildren().get(0)).getChildren().get(0);
+			readyBttn.setDisable(true);
+		}
 		connectedPlayers.refresh();
 
 	}

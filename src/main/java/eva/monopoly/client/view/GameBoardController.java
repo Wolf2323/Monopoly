@@ -1,39 +1,38 @@
 package eva.monopoly.client.view;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.OptionalInt;
 import java.util.ResourceBundle;
 
+import eva.monopoly.api.game.card.Card.CardType;
 import eva.monopoly.api.game.player.Player;
 import eva.monopoly.api.game.street.BuyableStreet;
+import eva.monopoly.api.game.street.NonBuyableStreet;
 import eva.monopoly.api.game.street.Street;
-import eva.monopoly.api.game.street.streets.BuyableNormalStreet;
 import eva.monopoly.client.MonopolyClient;
+import eva.monopoly.server.game.street.streets.BuyableFactoryStreet;
+import eva.monopoly.server.game.street.streets.BuyableNormalStreet;
+import eva.monopoly.server.game.street.streets.BuyableTrainstationStreet;
+import eva.monopoly.server.game.street.streets.NonBuyableCommunityStreet;
+import eva.monopoly.server.game.street.streets.NonBuyableEventStreet;
+import eva.monopoly.server.game.street.streets.NonBuyableJailStreet;
+import eva.monopoly.server.game.street.streets.NonBuyableMoneyStreet;
+import eva.monopoly.server.game.street.streets.NonBuyableNormalStreet;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -157,9 +156,9 @@ public class GameBoardController implements Initializable {
 		playerName.setText(uName);
 	}
 
-	private void refreshMoney(String amount) {
+	private void refreshMoney(int newMoney) {
 		// show Money of the Player
-		money.setText("" + amount);
+		money.setText("" + newMoney);
 	}
 
 	public void showCards() {
@@ -175,12 +174,16 @@ public class GameBoardController implements Initializable {
 	}
 
 	public void startRound() {
-
 		/*
 		 * show Dice roll, show data of target field, give button options to buy
 		 * or ignore if field is not occupied, give option to place house if
 		 * target field and corresponding street is owned by the player
 		 */
+		roundWindow = new Stage();
+		roundWindow.initModality(Modality.APPLICATION_MODAL);
+		roundWindow.setTitle("Rundenoptionen");
+		roundWindow.setMinWidth(400);
+		roundWindow.setMinHeight(500);
 		if (player.isJailed()) { // give options to either pay 50, use card if
 									// in possession, roll dice 3 times
 			Label header = new Label("DU BIST IM GEFÄNGNIS!");
@@ -189,12 +192,17 @@ public class GameBoardController implements Initializable {
 			Button thirdOpt = new Button("Würfeln");
 			firstOpt.setOnAction(e -> {
 				MonopolyClient.unjail("money");
+				MonopolyClient.toInterruptInterrupt();
+
 			});
 			secondOpt.setOnAction(e -> {
 				MonopolyClient.unjail("card");
+				MonopolyClient.toInterruptInterrupt();
+
 			});
 			thirdOpt.setOnAction(e -> {
 				MonopolyClient.rollDice();
+				MonopolyClient.toInterruptInterrupt();
 			});
 			HBox dices = new HBox(10);
 			dices.setAlignment(Pos.CENTER);
@@ -229,6 +237,7 @@ public class GameBoardController implements Initializable {
 			Button rollDice = new Button("Würfeln");
 			rollDice.setOnAction(e -> { // send message to Server to roll Dice
 				MonopolyClient.rollDice();
+				MonopolyClient.toInterruptInterrupt();
 			});
 			layout = new VBox(10);
 			layout.setPadding(new Insets(10, 10, 10, 10));
@@ -254,17 +263,19 @@ public class GameBoardController implements Initializable {
 		} else {
 			diceNumber2.setText("Nein");
 		}
-		continueBttn.setText("Laufen");
+		continueBttn.setText("Bewegen");
 		continueBttn.setOnAction(e -> {
-			MonopolyClient.getStreetData();
+			MonopolyClient.toInterruptInterrupt();
 		});
 	}
 
 	public void jail() {
+		player.jail();
 		Label prisonTxt = new Label("DU KOMMST INS GEFÄNGNIS!");
 		Button closeBttn = new Button("Runde beenden");
 		closeBttn.setOnAction(e -> {
 			roundWindow.close();
+			MonopolyClient.toInterruptInterrupt();
 			MonopolyClient.roundFinished();
 		});
 		layout = new VBox(10);
@@ -275,19 +286,19 @@ public class GameBoardController implements Initializable {
 		roundWindow.setScene(scene);
 	}
 
-	public void showMoveData(Street street, OptionalInt optionalInt, int i) { // show
-																				// Data
-																				// of
-																				// the
-																				// Street
-																				// depending
-																				// on
-																				// type
-																				// of
+	public void showMoveData(Street street, Integer amount, int newMoney) { // show
+																			// Data
+																			// of
+																			// the
+																			// Street
+																			// depending
+																			// on
+																			// type
+																			// of
 		// street and give corresponding options
 		if (street instanceof BuyableStreet) {
 			BuyableStreet buyStreet = (BuyableStreet) street;
-			if (buyStreet.getOwner() != null) {
+			if (buyStreet.getOwner() == null) {
 				Rectangle color = new Rectangle();
 				color.setWidth(116);
 				color.setHeight(12);
@@ -336,15 +347,39 @@ public class GameBoardController implements Initializable {
 					Label s6Rent = new Label("" + buyNormStreet.getHousecost()); // Gebäudekosten
 					lRents.getChildren().addAll(l0Rent, l1Rent, l2Rent, l3Rent, l4Rent, l5Rent, l6Rent);
 					sRents.getChildren().addAll(s0Rent, s1Rent, s2Rent, s3Rent, s4Rent, s5Rent, s6Rent);
+				} else if (buyStreet instanceof BuyableFactoryStreet) {
+					BuyableFactoryStreet factoryStreet = (BuyableFactoryStreet) buyStreet;
+					Label l0Rent = new Label("Wenn man 1 Werke besitzt:");
+					Label l1Rent = new Label("Wenn man 2 Werke besitzt:");
+					Label s0Rent = new Label("" + factoryStreet.getFactorsingle());
+					Label s1Rent = new Label("" + factoryStreet.getFactorgroup());
+					lRents.getChildren().addAll(l0Rent, l1Rent);
+					sRents.getChildren().addAll(s0Rent, s1Rent);
+
+				} else if (buyStreet instanceof BuyableTrainstationStreet) {
+					BuyableTrainstationStreet trainstationStreet = (BuyableTrainstationStreet) buyStreet;
+					Label l0Rent = new Label("Wenn man 1 Bahnhöfe besitzt:");
+					Label l1Rent = new Label("Wenn man 2 Bahnhöfe besitzt:");
+					Label l2Rent = new Label("Wenn man 3 Bahnhöfe besitzt:");
+					Label l3Rent = new Label("Wenn man 4 Bahnhöfe besitzt:");
+					Label s0Rent = new Label("" + trainstationStreet.getOnestation());
+					Label s1Rent = new Label("" + trainstationStreet.getTwostations());
+					Label s2Rent = new Label("" + trainstationStreet.getThreestations());
+					Label s3Rent = new Label("" + trainstationStreet.getFourstations());
+					lRents.getChildren().addAll(l0Rent, l1Rent, l2Rent, l3Rent);
+					sRents.getChildren().addAll(s0Rent, s1Rent, s2Rent, s3Rent);
 				}
 				rent.getChildren().addAll(lRents, sRents);
 				HBox cost = new HBox(10);
 				Label lCost = new Label("Kosten:");
-				Label sCost = new Label("Placeholder"); // TODO DATA insert
+				Label sCost = new Label("" + buyStreet.getCost()); // TODO DATA
+																	// insert
 				cost.getChildren().addAll(lCost, sCost);
 				HBox mortg = new HBox(10);
 				Label lMortg = new Label("Hypothek:");
-				Label sMortg = new Label("Placeholder"); // TODO DATA insert
+				Label sMortg = new Label("" + buyStreet.getMortgageValue()); // TODO
+																				// DATA
+																				// insert
 				cost.getChildren().addAll(lMortg, sMortg);
 				layout = new VBox(10);
 				if (color != null) {
@@ -355,10 +390,12 @@ public class GameBoardController implements Initializable {
 				Button ignore = new Button("Ignorieren");
 				buy.setOnAction(e -> {
 					MonopolyClient.buyStreet(true); // TODO correct Parameter
-					
+					MonopolyClient.toInterruptInterrupt();
 				});
 				ignore.setOnAction(e -> {
 					MonopolyClient.buyStreet(false);
+					MonopolyClient.toInterruptInterrupt();
+
 					continueRound();
 				});
 				actions.getChildren().addAll(buy, ignore);
@@ -393,18 +430,20 @@ public class GameBoardController implements Initializable {
 				} else {
 					color = null;
 				}
-				Label streetName = new Label(); // TODO DATA insert
+				Label streetName = new Label(buyStreet.getName());
 				HBox ownerName = new HBox(10);
 				Label oName = new Label("Besitzer: ");
-				Label owName = new Label(); // TODO DATA insert
+				Label owName = new Label(buyStreet.getOwner().getName());
 				ownerName.getChildren().addAll(oName, owName);
 				HBox costBox = new HBox(10);
 				Label cost = new Label("Kosten: ");
-				Label costs = new Label(); // TODO DATA insert
+				Label costs = new Label("" + amount);
 				costBox.getChildren().addAll(cost, costs);
 				Button pay = new Button("Bezahlen");
 				pay.setOnAction(e -> {
-					MonopolyClient.payFee();
+					refreshMoney(newMoney);
+					MonopolyClient.toInterruptInterrupt();
+					continueRound();
 				});
 				layout = new VBox(10);
 				if (color != null) {
@@ -412,6 +451,45 @@ public class GameBoardController implements Initializable {
 				}
 				layout.setPadding(new Insets(10, 10, 10, 10));
 				layout.getChildren().addAll(streetName, ownerName, costBox, pay);
+				layout.setAlignment(Pos.CENTER);
+				Scene scene = new Scene(layout);
+				roundWindow.setScene(scene);
+			}
+		} else if (street instanceof NonBuyableStreet) {
+			NonBuyableStreet noBuyStreet = (NonBuyableStreet) street;
+			if (noBuyStreet instanceof NonBuyableCommunityStreet || street instanceof NonBuyableEventStreet) {
+				MonopolyClient.toInterruptInterrupt();//TODO
+			} else if (noBuyStreet instanceof NonBuyableJailStreet) {
+				jail();
+			} else if (noBuyStreet instanceof NonBuyableMoneyStreet) {
+				NonBuyableMoneyStreet noBuyMonStreet = (NonBuyableMoneyStreet) noBuyStreet;
+				Label streetName = new Label(noBuyMonStreet.getName());
+				HBox costBox = new HBox(10);
+				Label cost = new Label("Betrag: ");
+				Label costs = new Label("" + amount);
+				costBox.getChildren().addAll(cost, costs);
+				Button pay = new Button("Bestätigen");
+				pay.setOnAction(e -> {
+					MonopolyClient.toInterruptInterrupt();
+					continueRound();
+				});
+				layout = new VBox(10);
+				layout.setPadding(new Insets(10, 10, 10, 10));
+				layout.getChildren().addAll(streetName, costBox, pay);
+				layout.setAlignment(Pos.CENTER);
+				Scene scene = new Scene(layout);
+				roundWindow.setScene(scene);
+			} else if (noBuyStreet instanceof NonBuyableNormalStreet) {
+				Label streetName = new Label(noBuyStreet.getName());
+				HBox costBox = new HBox(10);
+				Button pay = new Button("Weiter");
+				pay.setOnAction(e -> {
+					MonopolyClient.toInterruptInterrupt();
+					continueRound();
+				});
+				layout = new VBox(10);
+				layout.setPadding(new Insets(10, 10, 10, 10));
+				layout.getChildren().addAll(streetName, costBox, pay);
 				layout.setAlignment(Pos.CENTER);
 				Scene scene = new Scene(layout);
 				roundWindow.setScene(scene);
@@ -487,6 +565,7 @@ public class GameBoardController implements Initializable {
 		window.setScene(mainMenu);
 		window.show();
 	}
+
 	private void continueRound() {
 		if (doublets) {
 			startRound();
@@ -512,14 +591,48 @@ public class GameBoardController implements Initializable {
 				player = p;
 			}
 		}
-		roundWindow = new Stage();
-		roundWindow.initModality(Modality.APPLICATION_MODAL);
-		roundWindow.setTitle("Rundenoptionen");
-		roundWindow.setMinWidth(400);
-		roundWindow.setMinHeight(500);
 	}
 
 	public void refreshTurnName(String name) {
 		turnName.setText(name);
+	}
+
+	public void showBuyConfirmation(BuyableStreet street, int newMoney) {
+		refreshMoney(newMoney);
+		Label confirm = new Label(street.getName() + " wurde für " + street.getCost() + "gekauft!");
+		Button endRound = new Button("Okay");
+		endRound.setOnAction(e -> {
+			continueRound();
+		});
+		layout = new VBox(10);
+		layout.getChildren().addAll(confirm, endRound);
+		layout.setPadding(new Insets(10, 10, 10, 10));
+		layout.setAlignment(Pos.CENTER);
+		Scene scene = new Scene(layout);
+		roundWindow.setScene(scene);
+	}
+
+	public void showCard(CardType type, String cText, int newMoney) {
+		Label header = new Label();
+		if (type.equals(CardType.COMMUNITY)) {
+			header.setText("GEMEINSCHAFTKARTE");
+		} else if (type.equals(CardType.EVENT)) {
+			header.setText("EREIGNISKARTE");
+		}
+		TextArea text = new TextArea();
+		text.setText(cText);
+		text.setEditable(false);
+		Button confirm = new Button("Bestätigen");
+		confirm.setOnAction(e -> {
+			refreshMoney(newMoney);
+			continueRound();
+		});
+		layout = new VBox(10);
+		layout.getChildren().addAll(header, text, confirm);
+		layout.setPadding(new Insets(10, 10, 10, 10));
+		layout.setAlignment(Pos.CENTER);
+		Scene scene = new Scene(layout);
+		roundWindow.setScene(scene);
+
 	}
 }
