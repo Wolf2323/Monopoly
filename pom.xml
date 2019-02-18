@@ -125,6 +125,11 @@
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>eva.monopoly.client.MonopolyClient</mainClass>
+						</manifest>
+					</archive>
 				</configuration>
 				<executions>
 					<execution>
