@@ -14,8 +14,10 @@ import eva.monopoly.api.network.messages.BuyStreet;
 import eva.monopoly.api.network.messages.CardPulled;
 import eva.monopoly.api.network.messages.GameStateChanged;
 import eva.monopoly.api.network.messages.GameStateChanged.GameState;
+import eva.monopoly.api.network.messages.GetCards;
 import eva.monopoly.api.network.messages.GetConnectedClients;
 import eva.monopoly.api.network.messages.GetPlayers;
+import eva.monopoly.api.network.messages.GetStreets;
 import eva.monopoly.api.network.messages.PawnChanged;
 import eva.monopoly.api.network.messages.PlayerStatusChanged;
 import eva.monopoly.api.network.messages.PlayerStatusChanged.ConnectionState;
@@ -196,14 +198,25 @@ public class MonopolyClient extends Application {
 		});
 		client.getSocketConnector().registerHandle(GetPlayers.class, (con, state) -> {
 			Platform.runLater(() -> {
-				GameBoardController.getInstance().initializeGame(state.getPlayers());
+				GameBoardController.getInstance().displayPlayers(state.getPlayers());
+			});
+		});
+		client.getSocketConnector().registerHandle(GetCards.class, (con, state) -> {
+			Platform.runLater(() -> {
+				GameBoardController.getInstance().displayCards(state.getCards());
+			});
+		});
+		client.getSocketConnector().registerHandle(GetStreets.class, (con, state) -> {
+			Platform.runLater(() -> {
+				GameBoardController.getInstance().displayStreets(state.getStreets(), true);
 			});
 		});
 		client.getSocketConnector().registerHandle(StartStopRound.class, (con, state) -> {
 			if (state.getName().equals(name)) {
 				Platform.runLater(() -> {
-					GameBoardController.getInstance().startRound();
+					GameBoardController.getInstance().initializeGame(state.getPlayer());
 					GameBoardController.getInstance().refreshTurnName(state.getName());
+					GameBoardController.getInstance().startRound();
 				});
 				waitForInterrupt();
 			}
@@ -236,11 +249,19 @@ public class MonopolyClient extends Application {
 		});
 		client.getSocketConnector().registerHandle(StreetEntered.class, (con, state) -> {
 			if (state.getName().equals(name)) {
-				Platform.runLater(() -> {
-					GameBoardController.getInstance().showMoveData(state.getStreet(), state.getMoneyAmount(),
-							state.getNewMoney());
-				});
-				waitForInterrupt();
+				if (!state.getStreet().getName().equalsIgnoreCase("Los")) {
+					Platform.runLater(() -> {
+						GameBoardController.getInstance().showMoveData(state.getStreet(), state.getMoneyAmount(),
+								state.getNewMoney());
+					});
+					waitForInterrupt();
+				} else {
+					Platform.runLater(() -> {
+						GameBoardController.getInstance().showLos(state.getStreet(), state.getMoneyAmount(),
+								state.getNewMoney());
+					});
+
+				}
 			} else {
 				LOG.info("Der Spieler " + state.getName() + " ist auf " + state.getStreet().getName() + " gelandet");
 			}
@@ -248,8 +269,12 @@ public class MonopolyClient extends Application {
 		client.getSocketConnector().registerHandle(CardPulled.class, (con, state) -> {
 			if (state.getName().equals(name)) {
 				Platform.runLater(() -> {
-					GameBoardController.getInstance().showCard(state.getCard().getType(), state.getCard().getText(), state.getNewMoney());
+					GameBoardController.getInstance().showCard(state.getCard().getType(), state.getCard().getText(),
+							state.getNewMoney());
 				});
+				if (GameBoardController.getInstance().getDoublets()) {
+					waitForInterrupt();
+				}
 			}
 		});
 		client.getSocketConnector().registerHandle(StreetBuyed.class, (con, state) -> {
@@ -258,6 +283,9 @@ public class MonopolyClient extends Application {
 				Platform.runLater(() -> {
 					GameBoardController.getInstance().showBuyConfirmation(state.getStreet(), state.getNewMoney());
 				});
+				if (GameBoardController.getInstance().getDoublets()) {
+					waitForInterrupt();
+				}
 			}
 		});
 	}
@@ -336,6 +364,10 @@ public class MonopolyClient extends Application {
 		client.getSocketConnector().sendMessage(new StartStopRound(name));
 	}
 
+	public static void getCards() {
+		client.getSocketConnector().sendMessage(new GetCards(name));
+	}
+
 	public static void toInterruptInterrupt() {
 		toInterrupt.interrupt();
 	}
@@ -348,5 +380,14 @@ public class MonopolyClient extends Application {
 			}
 		} catch (InterruptedException e) {
 		}
+	}
+
+	public static void getStreets() {
+		client.getSocketConnector().sendMessage(new GetStreets(name));
+	}
+
+	public static void getPlayers() {
+		client.getSocketConnector().sendMessage(new GetPlayers(name));
+
 	}
 }
