@@ -38,6 +38,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -374,9 +375,11 @@ public class GameBoardController implements Initializable {
 			Label pawn = new Label(MainMenuController.getInstance().pawnToString(p.getPawn()));
 			Label pos = new Label();
 			if (streetIDs[p.getPositionIndex()].getChildren().get(0) instanceof Label) {
-				pos.setText(((Label)streetIDs[p.getPositionIndex()].getChildren().get(0)).getText());
+				pos.setText(((Label) streetIDs[p.getPositionIndex()].getChildren().get(0)).getText());
+			} else if (streetIDs[p.getPositionIndex()].getChildren().get(0) instanceof Text) {
+				pos.setText(((Text) streetIDs[p.getPositionIndex()].getChildren().get(0)).getText());
 			} else {
-				pos.setText(((Label)streetIDs[p.getPositionIndex()].getChildren().get(1)).getText());
+				pos.setText(((Label) streetIDs[p.getPositionIndex()].getChildren().get(1)).getText());
 			}
 			Label lMoney = new Label("" + p.getMoney());
 			Button b = new Button("Strassen");
@@ -395,9 +398,9 @@ public class GameBoardController implements Initializable {
 
 	public void startRound() {
 		/*
-		 * show Dice roll, show data of target field, give button options to buy or
-		 * ignore if field is not occupied, give option to place house if target field
-		 * and corresponding street is owned by the player
+		 * show Dice roll, show data of target field, give button options to buy
+		 * or ignore if field is not occupied, give option to place house if
+		 * target field and corresponding street is owned by the player
 		 */
 		roundWindow = new Stage();
 		roundWindow.initModality(Modality.APPLICATION_MODAL);
